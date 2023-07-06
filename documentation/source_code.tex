@@ -1,0 +1,109 @@
+\newpage
+\chapter{The Source Code}
+\section{Custom Style file: litcode.sty}
+\subsection{The Type of Styling I Want}
+Before delving into the code making up \tt litcode \rm command line tool, I want to first talk about the
+styling which I wanted for my code-blocks or \it chunks \rm. \\
+Firstly, I wanted to write the chunks in an evironment whose name wasn't greater than five characters. Why?
+When working on a project for an excessive period of time, a person will naturally have some fatigue and might
+misspell the environment name. Also, I am not a professional typer: I still look at the keys from time to time
+while typing and I tend to use my right hand more than my left hand for typing. I know it for a fact that if I
+were to type
+
+\begin{vcode}
+\begin{lstlisting}{caption = 'hello world', label = 'hello world'}
+\end{vcode}
+
+a 100 times, I am going to make several typing mistakes 80\% of the time. Yes, I am that bad! It would be
+better for me to type 
+
+\begin{vcode}
+\begin{code}{hello world}
+\end{vcode}
+
+than the \it monstrosity \rm I previously wrote. This means that I have make sure that the environments I was
+going to build had as few arguments as possible, and their caption is the same as their label.\\
+Another important feature which must be there in the environment is inline chunk referencing. A program
+written in literate style comprises of several chunks which may refer to each other. For example the chunk
+below refers to a chunk named `Print hello world 100 times':
+
+\begin{vcode}
+#include <stdio.h>
+
+int main()
+{
+    @<\coderef{Print hello world 100 times}@>
+    return 0;
+}
+\end{vcode}
+
+$\ldots$ which has been described here:
+
+\begin{code}[Print hello world 100 times]
+for (int i = 0; i < 100; ++i) {
+    fprintf(stdout, "Hello, world\n");
+}
+\end{code}
+
+This meant that I had to find a way to break the \it ``verbatimness'' \rm of the listing environment and
+develop a new type of caption and reference style which matches those defined by Knuth and Ramsey. The former
+was done by defining escape characters for the custom listing environments and the latter by the use of
+\tt caption \rm package and use of \verb|\coderef{}|. The end result was \tt litcode \rm package.\\
+
+I am going to use this package for the majority of my projects and I suggest others to try it out too. This
+package defines several variables and environment in \tt litcode.sty \rm file. I will be honest: I am not
+that good in \LaTeX. Most of the styling file --- and by most I mean about 70\% --- has been written by
+ChatGPT. It is a fascinating tool but it does make mistakes many many times. Once the core portion of styling
+file had been implemented, I did some major and minor fixes by doing hit and trial till I was satisfied by the
+result.\\ 
+
+The \tt litcode \rm package defines the following flavours of `listing' environments:
+
+\begin{enumerate}
+\item \tt code \rm : An environment for your regular coding tasks. You can code in any language you want in
+this environment. \tt @< \rm and \tt @> \rm are used to escape any piece of \LaTeX code in this environment,
+usually \verb|\coderef|. If you intend on using these using these escape characters themselves, I would
+suggest you to use 
+
+\item \tt latex \rm: Now this is the environment in which you can write bits of \LaTeX \thinspace code. \tt
+/*< \rm and \tt >*/ \rm are the escape characters in this environment.  
+
+\item \tt vcode \rm: An environment for listing some text without any captions or labels. No escape characters
+are defined for this environment.
+\end{enumerate}
+
+To refer to a chunk either from inside the chunk or from anywhere else in the document, use \verb|\coderef{}|
+macro as has been shown in the example in \cref{fig:using-coderef}. 
+
+\begin{figure}[H]
+\centering
+\begin{framed}
+\begin{vcode}
+
+We begin by printing \texttt{Hello world} on the screen. \coderef{Hello world in C++} is going to print \texttt{Hello world} on the terminal.
+
+\begin{code}[Hello world in C++]
+
+@<\coderef{Setup}@>
+
+int main()
+{
+    cout << "Hello, world" << endl;
+    return 0;
+}
+
+\end{code}
+
+\begin{code}[Setup]
+
+#include <iostream>
+
+using namespace std;
+
+\end{code}
+\end{vcode}
+\end{framed}
+\caption{Using \tt code \rm environment along with \tt coderef \rm}
+\label{fig:using-coderef}
+\end{figure}
+
