@@ -1,4 +1,5 @@
 DOC := ./documentation
+EXAMPLES := /examples
 SHELL := /usr/bin/bash
 
 buildlatex: $(wildcard *.tex)
