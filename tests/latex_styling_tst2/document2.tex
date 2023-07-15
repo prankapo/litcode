@@ -1,0 +1,71 @@
+\documentclass{article}
+
+\usepackage{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[OT1]{fontenc}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{textcomp}
+
+\usepackage{calc}
+\usepackage{caption}
+
+\usepackage{litcode}
+\usepackage{verbatim}
+
+\def\codebg{yellow!10}
+\def\vcodebg{green!10}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\title{Document 2}
+\author{Praneet Kapor}
+\date{\today}
+\maketitle
+
+\section{Sample 1}
+I am going to present two examples to the reader. This is the first one, which will print \tt Hello, world!
+\rm 100 times.
+
+\begin{code}[main.c]
+@<$\langle$\textit{main.c}$\rangle \equiv$@>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char **argv)
+{
+    @<\coderef{Print `Hello World' 100 times}@>
+    return 0;
+}
+\end{code}
+
+The following piece of code will print \tt Hello, world! \rm 100 times.
+
+\begin{code}[Print `Hello World' 100 times]
+@<$\langle$\textit{Print `Hello World' 100 times}$\rangle \equiv$@>
+for (int i = 0; i < 100; ++i)
+{
+    fprintf(stdout, "Hello, world!\n");
+}
+\end{code}
+
+Now here is some regular text.
+\begin{code}
+A big brown fox jumped over a little lazy dog.
+You escape in code by using @<@<@> and @<@>@> as escape characters.
+\end{code}
+
+A more appropriate choice sometimes would be the \tt vcode \rm environment. It won't get captioned or
+labelled.
+\begin{vcode}
+A big brown fox jumped over a little lazy dog.
+You escape in vcode by using @< and @> as escape characters.
+\end{vcode}
+
+\lstlistoflistings
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

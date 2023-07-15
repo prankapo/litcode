@@ -1,0 +1,106 @@
+\RequirePackage[T1]{fontenc}
+\usepackage{amsmath}
+\RequirePackage{textcomp}
+\RequirePackage{calc}
+\RequirePackage{caption}
+\RequirePackage{hyperref}
+\RequirePackage{cleveref}
+
+\RequirePackage{fancyvrb}
+\RequirePackage{listings}
+\RequirePackage{xcolor}
+
+\RequirePackage{xparse}
+
+\def\litcode{{LitCode}}
+\def\linewidth{\textwidth}
+\def\xleftmargin{10pt}
+\def\xrightmargin{0pt}
+\def\codebg{yellow!15}
+\def\codecaptionbg{green!15}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=red,
+    urlcolor=red
+}
+
+\urlstyle{same}
+
+% Define code environment: This is what a person (probably only me), is supposed to use most frequently.
+\lstnewenvironment{code}[1][]{
+    \lstset{
+        caption={\protect\detokenize{#1}},
+        label={#1},
+        columns=fullflexible,
+        basicstyle=\ttfamily,
+        keepspaces=true,
+        breaklines=true,
+        upquote=true,
+        backgroundcolor=\color{\codebg},
+        escapeinside={@<}{@>},
+        linewidth=\linewidth,
+        xleftmargin=\xleftmargin,
+        xrightmargin=\xrightmargin,
+    }
+}{}
+
+
+% Define latex environment: I can write LaTeX code in this environment without fearing about messing up
+% formatting. Mainly because the escape characters used by the code and latex environments are different.
+\lstnewenvironment{latex}[1][]{
+    \lstset{
+        caption={\protect\detokenize{#1}},
+        label={#1},
+        columns=fullflexible,
+        basicstyle=\ttfamily,
+        keepspaces=true,
+        breaklines=true,
+        upquote=true,
+        backgroundcolor=\color{\codebg},
+        escapeinside={/*<}{>*/},
+        linewidth=\linewidth,
+        xleftmargin=\xleftmargin,
+        xrightmargin=\xrightmargin
+    }
+}{}
+
+% Verbatim code environment: Takes no captions, has no labels and won't get included in the listing. 
+% Purely verbatim!!
+\lstnewenvironment{vcode}[1][]{
+    \lstset{
+        columns=fullflexible,
+        basicstyle=\ttfamily,
+        keepspaces=true,
+        breaklines=true,
+        upquote=true,
+        backgroundcolor=\color{\codebg},
+        linewidth=\linewidth,
+        xleftmargin=\xleftmargin,
+        xrightmargin=\xrightmargin
+    }
+}{}
+
+
+\DeclareCaptionFormat{codecaptionformat}
+{
+    \colorbox{\codecaptionbg}
+    {
+        \begin{minipage}{\dimexpr\textwidth}
+            $\langle\texttt{#3}\rangle\!\!\equiv$
+        \end{minipage}
+    }
+}
+
+\captionsetup[lstlisting]{
+    format=codecaptionformat,
+    justification=raggedright,
+    singlelinecheck=off
+}
+
+\makeatletter
+\renewcommand\l@lstlisting[2]{\@dottedtocline{1}{0em}{2.3em}{\texttt{#1}}{#2}}
+\makeatother
+
+\newcommand{\coderef}[1]{$\langle$\texttt{\nameref{#1}}$\rangle$}
+%\newcommand{\coderef}[1]{$\langle$\texttt{\nameref{#1}} \rm(p.~\pageref{#1})$\rangle$}

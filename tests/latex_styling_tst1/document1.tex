@@ -1,0 +1,114 @@
+\documentclass{article}
+
+\usepackage{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[OT1]{fontenc}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{textcomp}
+
+\usepackage{calc}
+\usepackage{caption}
+
+\usepackage{litcode}
+\usepackage{verbatim}
+
+\def\xleftmargin{0pt}
+\def\codecaptionbg{white}
+
+\begin{document}
+
+\title{Document1}
+\author{Praneet Kapor}
+\date{\today}
+\maketitle
+
+\section{Test Code}
+Using \tt Verbatim \rm environment:
+
+\begin{Verbatim}
+#include <stdio.h>
+
+int main(int argc, char **argv)
+{
+    fprintf(stdout, "Hello, world\n");
+    return 0;
+}
+\end{Verbatim}
+
+\noindent Using \tt vcode \rm environment:
+
+\begin{vcode}
+/* vcode Env */
+#include <stdio.h>
+
+int main(int argc, char **argv)
+{
+    fprintf(stdout, "Hello, world\n");
+    return 0;
+}
+\end{vcode}
+
+\noindent Using \tt code \rm environment:
+
+\begin{code}[Hello world in C]
+/* code Env */
+#include <stdio.h>
+
+int main(int argc, char **argv)
+{
+    fprintf(stdout, "Hello, world\n");
+    return 0;
+}
+\end{code}
+
+\noindent And finally, using a normal \tt listing \rm environment:
+
+\begin{lstlisting}[
+    columns=fullflexible,
+    basicstyle=\ttfamily,
+    keepspaces=true,
+    breaklines=true,
+    upquote=true,
+    escapeinside={@<}{@>},label=]
+@<$\langle$@>Hello world in C@<$\rangle  \equiv$@>
+/* lstlisting env */
+#include <stdio.h>
+
+int main(int argc, char **argv)
+{
+    fprintf(stdout, "Hello, world!\n");
+    return 0;
+}
+@<@<Just some text@>@>
+\end{lstlisting}
+
+
+\begin{ncode}[main.c]
+@<$\langle$\it main.c\rm$\rangle \equiv$@>
+/* ncode env */
+#include <stdio.h>
+
+int main(int argc, char **argv)
+{
+    @<\coderef{Print Hello, world! 100 times}@>
+    return 0;
+}
+\end{ncode}
+
+\noindent Now this is what I call as \it `intelligence'\rm. I used \verb|\phantom{}| to hide my captions
+away!! Now I am free of that non-sense!!!! Hahahahha!!! \textheight, \textwidth
+
+\begin{ncode}[Print Hello, world! 100 times]
+@<$\langle$\it Print `Hello, world!' 100 times\rm$\rangle \equiv$@>
+for (int i = 0; i < 100; ++i)
+{
+    fprintf(stdout, "Hello, world!\n");
+}
+\end{ncode}
+
+
+\lstlistoflistings
+\end{document}
