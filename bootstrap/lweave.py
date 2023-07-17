@@ -55,6 +55,22 @@ def transpiler(lines):
                     oldcode = False
                 inChunk = False
                 continue
+            # Escape the escape characters.
+            #line = line.replace('@<', '@<@<@>')
+            #line = line.replace('@>', '@<@>@>')
+            buffer = ''
+            iterator = iter(range(len(line)))
+            for i in iterator:
+                if i < len(line) - 1 and ('@<' in line or '@>' in line):
+                    if line[i] + line[i + 1] == '@<':
+                        buffer += '@<@<@>'
+                        i = next(iterator)
+                    elif line[i] + line[i + 1] == '@>':
+                        buffer += '@<@>@>'
+                        i = next(iterator)
+                else:
+                    buffer += line[i]
+            line = buffer
         reference = re.findall(r'(?<=<<).+?(?=>>.*)', line.strip())
         if reference:
             reference = reference[0]
