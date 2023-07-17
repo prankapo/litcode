@@ -1,0 +1,169 @@
+\section{Introduction}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Artistic Nature of Computer Programs}
+
+The study of computers and computations is a science. However, computer programming is an art. To understand
+the difference between art and science we can read the following discussion on the subject by John Stuart
+Mill:
+
+\begin{quote}
+Several sciences are often necessary to form the groundwork of asingle art. Such is the complication of human
+affairs, that to en-able one thing to be done, it is often requisite to know the natureand properties of many
+things. ... Art in general consists of thetruths of Science, arranged in the most convenient order for
+prac-tice, instead of the order which is the most convenient for thought.Science and its truths so as to
+enable us to takegroups arrangesin at one view as much as possible of the general order of the uni-verse. Art
+... brings together from parts of the field of science mostremote from one another, the truths relating to
+the production ofthe different and heterogeneous conditions necessary to each effectwhich the exigencies of
+practical life require\cite{knuth1992literate}.
+\end{quote}
+
+A programmer writes a sequence of instructions to be given the computer so that a desired result can be
+achived or `computed by the computer'. This sequence of instructions are what we call a program.
+He\footnote{Read `He' as `He/she' throughout this article} has to skillfully use their knowledge about
+different subject, then learn some more, and then write the program step by step. There is lots of testing and
+debugging involved. There is no well defined way to writing a program. Hence, it is an art. \\
+
+The recent advancements in the field of machine learning have meant that large language models are able
+to put together a crappy code to do some stuff, it may very well be possible that we do indeed make computer
+programming a science. However, that would not take away the joy of writing programs. AI systems can be Chess
+and Go much better than most of the humans on this entire planet, but we still play these games because they
+are fun. Same goes for painting and photography --- we can tell a system like DALL-E to cook up a painting or
+a drone to take the photograph of forest. However, humans will still continue to paint and click photographs
+just because doing so gives us pleasure.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Structured Programming Methodology and Literate Programming}
+
+Structured programming methodology arose as a way to improve clarity, quality and development time of
+programs. It involves constructing a program using the three basic constructs --- sequential statements which
+occur and are executed one after the other, a conditional statement (\tt if\rm/\tt else\rm), and iterative
+statments (\tt for \rm and \tt while \rm loops). Using these three basic constructs we can build simple blocks
+and functions which work together to produce the result we desire.\\
+
+Though structured programming allows us to write programs with some discipline, the act writing a program is
+still an art. Some later parts of a program might have been written before the parts which are executed at the
+entry point. Moving from $A$ to $B$ in a program might have involved several complex steps, which a bunch of
+comments won't explain well. When we see a program, we essentially see a structure which was made out of a \it
+web \rm of ideas. This is the reason why we, programmers, have trouble understanding certain pieces of code
+which we had written a few months back. When we wrote them, we were in the \it zone \rm and were able to craft
+an edifice out of scattered ideas. Once we are done with a code, we are out of that zone. It takes
+considerable effort to go from the edifice to the \it web \rm of ideas which created it so that we can
+understand the paths to various rooms in the building.\\
+
+We can remedy this by documenting our code. Every good programmer knows the utility of a good documentation.
+However, almost every programmer hates to write documentation for their code. Why? Why would we hate to write
+something which will only help us and others in understanding something?\\
+
+A primary reason for this general dislike is the distractive nature of writing a documentation. Even with all
+its utility, it can become a distraction in a world where releases of a code base containing new features and
+bug fixes are to be shipped out at a very rapid pace.\\
+
+Also, a documentation might not end up explaining matters clearly sometimes. After all it is explaining the
+structure and not the ideas which lead to the creation of the structure. This documentation will be helpful
+for someone who wishes to use a library in their project, but it won't be of a great help for those who wish
+to understand the underlying construction of the structure.\\
+
+To remedy the deficiencies of `traditional' programming and documentation, Donald Knuth came up with the
+concept of \it Literate Programming\rm \cite{knuth1984literate}. In literate programming, you don't write
+structured programs. You essentially write an essay which contains `chunks' of the source code present
+throughout it. The prose explains the motivation and working of chunks. The source code inside a chunk can be
+expanded by referencing other chunks from inside it or by simply expanding its definition in the later part of
+the essay. We get the full program by combining the chunks together, a process which Knuth calls \it tangling
+\rm as we are producing a tangled up piece out of web of ideas, something which a computer can understand
+easily but some person not involved in the development might have trouble understanding. To produce a
+documentatiom, you pass the essay through a markup processing engine like \TeX or \LaTeX to produce a \tt DVI
+\rm or \tt PDF \rm file. This is what Knuth calls \it weaving \rm the web --- you weave the web to produce a
+beautifully typeset documentation which explains your code and its API, both for programmers and for users.\\
+
+The original literate programming system was \tt WEB \rm which was used by Knuth when writing \TeX typesetting
+engine. It used a program called \tt tangle \rm which took \tt .web \rm files and output the source code for
+\TeX engine written in PASCAL. Another program \tt weave \rm was used to produce the documentation in \tt DVI
+\rm format. The \tt WEB \rm could essentially be thought of as a bunch of macros which were built up on top of
+\TeX. A version of \tt WEB \rm for C programs called \tt CWEB \rm was developed by Donald Knuth and Silvio
+Levy and still used to this day by Knuth and others \cite{knuth1992literate}.\\
+
+Sometime later, Norman Ramsey came up with \tt noweb \rm literate programming system\cite{ramsey1994literate}.
+It was an improvement over \tt WEB \rm and \tt CWEB \rm thanks to its simplicity which arose from the simple
+markup it used to enclose and refer to code chunks. Code chunks were encoded with \texttt{<<Name of the
+chunk>>=} and \texttt{@}. You could refer to another chunk from inside a chunk by enclosing the name of the
+reference inside double angles. A short example of a literate program written in the \tt noweb \rm style is
+shown in \cite{fig:noweb-example}.
+
+\begin{centering}
+\fbox{\begin{figure}
+%source.web
+<<hello.c>> will be used to print `Hello world!' on the terminal a 100 times.
+
+<<hello.c>>=
+#include <stdio.h>
+
+int main()
+{
+    <<for loop>>
+    return 0;
+}
+@
+
+The for loop below will execute the \tt fprintf \rm statement inside it 100 times.
+
+<<for loop>>=
+for (int i = 0; i < 100; ++i) {
+    fprintf(stdout, "Hello, world!\n");
+}
+@
+\caption{A very simple example of literate programming using \tt noweb \rm}
+\label{fig:noweb-example}
+\end{figure}}
+\end{centering}
+
+In the terminal you will type \tt notangle source.web -Rhello.c > hello.c \rm to extract the source code. To
+produce a \LaTeX file, you will execute \tt noweave \rm : \tt noweave source.web -latex > source.tex \rm.\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Did Literate Programming take off?}
+
+In a way, yes. We have got Jupyter Notebooks and Mathematica, which provide \it Notebook \rm interfaces where
+you write your code like you usually do but intersperse it with chunks of markdown text explaining it. It has
+its merits --- scientific collaboration is one of them, which led to the code written in Jupyter notebooks
+being used to detect gravitational waves. However, notebooks aren't full literate programming systems as they
+do not allow you to place chunks as per your wish or refer to them.\\
+
+\it Physically Based Rendering \rm, a book on rendering of images in a way that imitates optics in real world,
+is actually a big literate program which explains the \tt pbrt \rm library. Its authors won an Academy award
+as their work was used in movies to render objects more realistically \cite{pharr2023physically}.
+
+In fact, full literate programming systems took off a bit. Which is sad knowing that had this approach to
+programming taken off completely, then programming would have been made more accessible to people and the
+quality of code would have improved drastically. Someone on ycombinator said (roughly, I don't remember the
+exact words), ``Literate programming requires discipline. It is not suited for world where software
+releases are done at such a fast pace.'' --- a statement which I found to be true once I started working in a
+corporate.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Why then another literate programming tool?}
+
+I could have used \tt noweb \rm but I suffer from NIH - `Not Invented Here' syndrome. The \tt -L \rm in \tt
+notangle \rm didn't seem to respect the indentation of reference in parent chunk which is not good for Python
+code. Its weaved output was largely unreadable for me. And the hacker guide for it was somewhat confusing ---
+I could never figure out how I can change styles or fix the operation of \tt -L \rm
+flag\cite{ramsey1992noweb}.\\
+
+So, I decided to write LitCode. It consists of four programs:
+\begin{enumerate}
+    \item \tt linit \rm: Generates \tt litcode.sty \rm file used for styling and referencing chunks.
+    \item \tt ldump \rm: Prints JSON containing chunks present in files passed to it as command line
+    arguments.
+    \item \tt ltangle \rm: Using the JSON generated by \tt ldump \rm it expands a chunk/reference which has
+    been passed to it as command line argument.
+    \item \tt lweave \rm: Produces \LaTeX equivalent of files passed to it as command line arguments. It
+    transpiles the markup characters used by LitCode to their \LaTeX counterparts.
+\end{enumerate}
+
+No one is going to probably use this tool except for me. Given my good experiences with literate programming I
+feel that I will be using this system for my life!! So without any more nonsense, lets write the source code
+for LitCode.\\
+
+\textbf{Note:} Some code is present in \tt bootstrap/ \rm which is used to build the current version of
+programs making up LitCode system. Those pieces are ran first (as you will see in the \tt Makefile \rm in the
+parent directory), and then the newly built LitCode is used to tangle and weave the \tt web \rm files.
