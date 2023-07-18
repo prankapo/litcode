@@ -87,37 +87,7 @@ Sometime later, Norman Ramsey came up with \tt noweb \rm literate programming sy
 It was an improvement over \tt WEB \rm and \tt CWEB \rm thanks to its simplicity which arose from the simple
 markup it used to enclose and refer to code chunks. Code chunks were encoded with \texttt{<<Name of the
 chunk>>=} and \texttt{@}. You could refer to another chunk from inside a chunk by enclosing the name of the
-reference inside double angles. A short example of a literate program written in the \tt noweb \rm style is
-shown in .%\cite{fig:noweb-example}.
-
-%\begin{centering}
-%\fbox{\begin{figure}
-%\begin{Verbatim}
-%source.web
-%< <hello.c> > will be used to print `Hello world!' on the terminal a 100 times.
-
-%< <hello.c> >=
-%#include <stdio.h>
-
-%int main()
-%{
-%    < <for loop> >
-%    return 0;
-%}
-%@
-
-%The for loop below will execute the \tt fprintf \rm statement inside it 100 times.
-
-%< <for loop> >=
-%for (int i = 0; i < 100; ++i) {
-%    fprintf(stdout, "Hello, world!\n");
-%}
-%@
-%\caption{A very simple example of literate programming using \tt noweb \rm}
-%\label{fig:noweb-example}
-%\end{Verbatim}
-%\end{figure}}
-%\end{centering}
+reference inside double angles.
 
 In the terminal you will type \tt notangle source.web -Rhello.c > hello.c \rm to extract the source code. To
 produce a \LaTeX file, you will execute \tt noweave \rm : \tt noweave source.web -latex > source.tex \rm.\\

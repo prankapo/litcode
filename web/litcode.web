@@ -14,6 +14,7 @@
 
 \usepackage{litcode}
 \usepackage{verbatim}
+\usepackage{framed}
 
 \usepackage[linesnumbered,ruled,vlined]{algorithm2e}
 

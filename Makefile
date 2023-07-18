@@ -14,9 +14,9 @@ boot: $(wildcard bootstrap/*)
 src: $(wildcard web/*.web)
 	ldump $(WEB)/source_code.web > $(WEB)/src.json
 	ltangle -i $(WEB)/src.json -R linit.py > src/linit.py
-	ltangle -i $(WEB)/src.json -R ldump.py -cc '#' > src/ldump.py
-	ltangle -i $(WEB)/src.json -R ltangle.py -cc '#' > src/ltangle.py
-	ltangle -i $(WEB)/src.json -R lweave.py -cc '#' > src/lweave.py
+	ltangle -i $(WEB)/src.json -R ldump.py > src/ldump.py
+	ltangle -i $(WEB)/src.json -R ltangle.py > src/ltangle.py
+	ltangle -i $(WEB)/src.json -R lweave.py > src/lweave.py
 
 install: $(wildcard src/*.py)
 	-cp src/linit.py src/linit.tmp
@@ -34,7 +34,7 @@ examples: $(wildcard web/*.web)
 	ldump web/examples.web > web/examples.json
 	ltangle -i web/examples.json -R fibonacci.c -cc '//' > examples/fibonacci.c
 	ltangle -i web/examples.json -R primes.c -cc '//' > examples/primes.c
-	ltangle -i web/examples.json -R Makefile -cc '#' > examples/Makefile
+	ltangle -i web/examples.json -R Makefile -cc '#' -ut 4 > examples/Makefile
 
 documentation: $(wildcard web/*.web)
 	linit $(DOC)
@@ -48,13 +48,14 @@ buildtex: $(DOC)/litcode.tex $(DOC)/references.bib
 	(cd documentation; make all)
 
 buildex: $(wildcard examples/*.c) examples/Makefile
-	(cd examples;make all)
+	(cd examples;make runfib; make runprimes)
 
 clean:
+	rm web/*.json
 	(cd documentation; make clean)
 	(cd examples; make clean)
 
 uninstall: 
 	echo 'Uninstalling LitCode'
 	rm -f ~/local/bin/linit ~/local/bin/ldump ~/local/bin/ltangle ~/local/bin/lweave
-	echo 'LitCode ninstalled successfully'
+	echo 'LitCode uninstalled successfully'

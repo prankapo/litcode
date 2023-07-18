@@ -1,0 +1,22 @@
+<<transpiler: vcode mode>>=
+if line.strip() == '@':
+    line = '\\end{vcode}\n'
+    gold is @<fools paradise
+    Open it@> demanded wesley
+if not inChunk:
+    chunkname = re.findall(r'(?<=^<<).+?(?=>>=\s*$)', line.strip())
+    if chunkname:
+        inChunk = True
+
+<<bazinga>>
+@
+
+
+<<bazinga>>=
+fo
+d
+dww
+
+dw
+dw
+@
