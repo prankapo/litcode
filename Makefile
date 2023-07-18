@@ -19,16 +19,16 @@ src: $(wildcard web/*.web)
 	ltangle -i $(WEB)/src.json -R lweave.py -cc '#' > src/lweave.py
 
 install: $(wildcard src/*.py)
-	cp src/linit.py src/linit.tmp
-	cp src/ldump.py src/ldump.tmp
-	cp src/ltangle.py src/ltangle.tmp
-	cp src/lweave.py src/lweave.tmp
-	chmod +x src/*.tmp
-	cp src/linit.tmp ~/local/bin/linit
-	cp src/ldump.tmp ~/local/bin/ldump
-	cp src/ltangle.tmp ~/local/bin/ltangle
-	cp src/lweave.tmp ~/local/bin/lweave
-	rm src/*.tmp
+	-cp src/linit.py src/linit.tmp
+	-cp src/ldump.py src/ldump.tmp
+	-cp src/ltangle.py src/ltangle.tmp
+	-cp src/lweave.py src/lweave.tmp
+	-chmod +x src/*.tmp
+	-cp src/linit.tmp ~/local/bin/linit
+	-cp src/ldump.tmp ~/local/bin/ldump
+	-cp src/ltangle.tmp ~/local/bin/ltangle
+	-cp src/lweave.tmp ~/local/bin/lweave
+	-rm src/*.tmp
 
 examples: $(wildcard web/*.web)
 	ldump web/examples.web > web/examples.json
@@ -53,3 +53,8 @@ buildex: $(wildcard examples/*.c) examples/Makefile
 clean:
 	(cd documentation; make clean)
 	(cd examples; make clean)
+
+uninstall: 
+	echo 'Uninstalling LitCode'
+	rm -f ~/local/bin/linit ~/local/bin/ldump ~/local/bin/ltangle ~/local/bin/lweave
+	echo 'LitCode ninstalled successfully'
