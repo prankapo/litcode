@@ -1,0 +1,840 @@
+\section{Introduction}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Artistic Nature of Computer Programs}
+
+The study of computers and computations is a science. However, computer programming is an art. To understand
+the difference between art and science we can read the following discussion on the subject by John Stuart
+Mill:
+
+\begin{quote}
+Several sciences are often necessary to form the groundwork of asingle art. Such is the complication of human
+affairs, that to en-able one thing to be done, it is often requisite to know the natureand properties of many
+things. ... Art in general consists of thetruths of Science, arranged in the most convenient order for
+prac-tice, instead of the order which is the most convenient for thought.Science and its truths so as to
+enable us to takegroups arrangesin at one view as much as possible of the general order of the uni-verse. Art
+... brings together from parts of the field of science mostremote from one another, the truths relating to
+the production ofthe different and heterogeneous conditions necessary to each effectwhich the exigencies of
+practical life require\cite{knuth1992literate}.
+\end{quote}
+
+A programmer writes a sequence of instructions to be given the computer so that a desired result can be
+achived or `computed by the computer'. This sequence of instructions are what we call a program.
+He\footnote{Read `He' as `He/she' throughout this article} has to skillfully use their knowledge about
+different subject, then learn some more, and then write the program step by step. There is lots of testing and
+debugging involved. There is no well defined way to writing a program. Hence, it is an art. \\
+
+The recent advancements in the field of machine learning have meant that large language models are able
+to put together a crappy code to do some stuff, it may very well be possible that we do indeed make computer
+programming a science. However, that would not take away the joy of writing programs. AI systems can be Chess
+and Go much better than most of the humans on this entire planet, but we still play these games because they
+are fun. Same goes for painting and photography --- we can tell a system like DALL-E to cook up a painting or
+a drone to take the photograph of forest. However, humans will still continue to paint and click photographs
+just because doing so gives us pleasure.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Structured Programming Methodology and Literate Programming}
+
+Structured programming methodology arose as a way to improve clarity, quality and development time of
+programs. It involves constructing a program using the three basic constructs --- sequential statements which
+occur and are executed one after the other, a conditional statement (\tt if\rm/\tt else\rm), and iterative
+statments (\tt for \rm and \tt while \rm loops). Using these three basic constructs we can build simple blocks
+and functions which work together to produce the result we desire.\\
+
+Though structured programming allows us to write programs with some discipline, the act writing a program is
+still an art. Some later parts of a program might have been written before the parts which are executed at the
+entry point. Moving from $A$ to $B$ in a program might have involved several complex steps, which a bunch of
+comments won't explain well. When we see a program, we essentially see a structure which was made out of a \it
+web \rm of ideas. This is the reason why we, programmers, have trouble understanding certain pieces of code
+which we had written a few months back. When we wrote them, we were in the \it zone \rm and were able to craft
+an edifice out of scattered ideas. Once we are done with a code, we are out of that zone. It takes
+considerable effort to go from the edifice to the \it web \rm of ideas which created it so that we can
+understand the paths to various rooms in the building.\\
+
+We can remedy this by documenting our code. Every good programmer knows the utility of a good documentation.
+However, almost every programmer hates to write documentation for their code. Why? Why would we hate to write
+something which will only help us and others in understanding something?\\
+
+A primary reason for this general dislike is the distractive nature of writing a documentation. Even with all
+its utility, it can become a distraction in a world where releases of a code base containing new features and
+bug fixes are to be shipped out at a very rapid pace.\\
+
+Also, a documentation might not end up explaining matters clearly sometimes. After all it is explaining the
+structure and not the ideas which lead to the creation of the structure. This documentation will be helpful
+for someone who wishes to use a library in their project, but it won't be of a great help for those who wish
+to understand the underlying construction of the structure.\\
+
+To remedy the deficiencies of `traditional' programming and documentation, Donald Knuth came up with the
+concept of \it Literate Programming\rm \cite{knuth1984literate}. In literate programming, you don't write
+structured programs. You essentially write an essay which contains `chunks' of the source code present
+throughout it. The prose explains the motivation and working of chunks. The source code inside a chunk can be
+expanded by referencing other chunks from inside it or by simply expanding its definition in the later part of
+the essay. We get the full program by combining the chunks together, a process which Knuth calls \it tangling
+\rm as we are producing a tangled up piece out of web of ideas, something which a computer can understand
+easily but some person not involved in the development might have trouble understanding. To produce a
+documentatiom, you pass the essay through a markup processing engine like \TeX or \LaTeX to produce a \tt DVI
+\rm or \tt PDF \rm file. This is what Knuth calls \it weaving \rm the web --- you weave the web to produce a
+beautifully typeset documentation which explains your code and its API, both for programmers and for users.\\
+
+The original literate programming system was \tt WEB \rm which was used by Knuth when writing \TeX typesetting
+engine. It used a program called \tt tangle \rm which took \tt .web \rm files and output the source code for
+\TeX engine written in PASCAL. Another program \tt weave \rm was used to produce the documentation in \tt DVI
+\rm format. The \tt WEB \rm could essentially be thought of as a bunch of macros which were built up on top of
+\TeX. A version of \tt WEB \rm for C programs called \tt CWEB \rm was developed by Donald Knuth and Silvio
+Levy and still used to this day by Knuth and others \cite{knuth1992literate}.\\
+
+Sometime later, Norman Ramsey came up with \tt noweb \rm literate programming system\cite{ramsey1994literate}.
+It was an improvement over \tt WEB \rm and \tt CWEB \rm thanks to its simplicity which arose from the simple
+markup it used to enclose and refer to code chunks. Code chunks were encoded with \texttt{<<Name of the
+chunk>>=} and \texttt{@}. You could refer to another chunk from inside a chunk by enclosing the name of the
+reference inside double angles. A short example of a literate program written in the \tt noweb \rm style is
+shown in .%\cite{fig:noweb-example}.
+
+%\begin{centering}
+%\fbox{\begin{figure}
+%\begin{Verbatim}
+%source.web
+%< <hello.c> > will be used to print `Hello world!' on the terminal a 100 times.
+
+%< <hello.c> >=
+%#include <stdio.h>
+
+%int main()
+%{
+%    < <for loop> >
+%    return 0;
+%}
+%@
+
+%The for loop below will execute the \tt fprintf \rm statement inside it 100 times.
+
+%< <for loop> >=
+%for (int i = 0; i < 100; ++i) {
+%    fprintf(stdout, "Hello, world!\n");
+%}
+%@
+%\caption{A very simple example of literate programming using \tt noweb \rm}
+%\label{fig:noweb-example}
+%\end{Verbatim}
+%\end{figure}}
+%\end{centering}
+
+In the terminal you will type \tt notangle source.web -Rhello.c > hello.c \rm to extract the source code. To
+produce a \LaTeX file, you will execute \tt noweave \rm : \tt noweave source.web -latex > source.tex \rm.\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Did Literate Programming take off?}
+
+In a way, yes. We have got Jupyter Notebooks and Mathematica, which provide \it Notebook \rm interfaces where
+you write your code like you usually do but intersperse it with chunks of markdown text explaining it. It has
+its merits --- scientific collaboration is one of them, which led to the code written in Jupyter notebooks
+being used to detect gravitational waves. However, notebooks aren't full literate programming systems as they
+do not allow you to place chunks as per your wish or refer to them.\\
+
+\it Physically Based Rendering \rm, a book on rendering of images in a way that imitates optics in real world,
+is actually a big literate program which explains the \tt pbrt \rm library. Its authors won an Academy award
+as their work was used in movies to render objects more realistically \cite{pharr2023physically}.
+
+In fact, full literate programming systems took off a bit. Which is sad knowing that had this approach to
+programming taken off completely, then programming would have been made more accessible to people and the
+quality of code would have improved drastically. Someone on ycombinator said (roughly, I don't remember the
+exact words), ``Literate programming requires discipline. It is not suited for world where software
+releases are done at such a fast pace.'' --- a statement which I found to be true once I started working in a
+corporate.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Why then another literate programming tool?}
+
+I could have used \tt noweb \rm but I suffer from NIH - `Not Invented Here' syndrome. The \tt -L \rm in \tt
+notangle \rm didn't seem to respect the indentation of reference in parent chunk which is not good for Python
+code. Its weaved output was largely unreadable for me. And the hacker guide for it was somewhat confusing ---
+I could never figure out how I can change styles or fix the operation of \tt -L \rm
+flag\cite{ramsey1992noweb}.\\
+
+So, I decided to write LitCode. It consists of four programs:
+\begin{enumerate}
+    \item \tt linit \rm: Generates \tt litcode.sty \rm file used for styling and referencing chunks.
+    \item \tt ldump \rm: Prints JSON containing chunks present in files passed to it as command line
+    arguments.
+    \item \tt ltangle \rm: Using the JSON generated by \tt ldump \rm it expands a chunk/reference which has
+    been passed to it as command line argument.
+    \item \tt lweave \rm: Produces \LaTeX equivalent of files passed to it as command line arguments. It
+    transpiles the markup characters used by LitCode to their \LaTeX counterparts.
+\end{enumerate}
+
+No one is going to probably use this tool except for me. Given my good experiences with literate programming I
+feel that I will be using this system for my life!! So without any more nonsense, lets write the source code
+for LitCode.\\
+
+\textbf{Note:} Some code is present in \tt bootstrap/ \rm which is used to build the current version of
+programs making up LitCode system. Those pieces are ran first (as you will see in the \tt Makefile \rm in the
+parent directory), and then the newly built LitCode is used to tangle and weave the \tt web \rm files.\section{Source Code}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Styling file}
+
+I will begin by defining the styling file which will be used by \LaTeX to style the chunks and references.
+This makes up \tt litcode \rm package. I will be honest --- I am not that good in \TeX and \LaTeX. Initially I
+took lots of help from ChatGPT to cook \tt litcode.sty \rm file. Later on, I decided to keep things simple,
+did some additions and deletions, and ended up with the current version of \tt litcode.sty \rm file.
+
+\begin{code}[litcode.sty]
+@<$\langle$\textit{litcode.sty}$\rangle\equiv$@>
+@<\coderef{Packages required by LitCode}@>
+@<\coderef{Variables in LitCode}@>
+@<\coderef{hyperref and url style setup}@>
+@<\coderef{code environment}@>
+@<\coderef{oldcode environment}@>
+@<\coderef{vcode environment}@>
+@<\coderef{Caption and Chunk Listing format}@>
+\end{code}
+
+After lots of hits and trials I ended up with the following list of packages which will be used by LitCode. A
+more clever user of \LaTeX \thinspace can maybe add and delete a few packages from this chunk.
+
+\begin{code}[Packages required by LitCode]
+@<$\langle$\textit{Packages required by LitCode}$\rangle\equiv$@>
+\RequirePackage[T1]{fontenc}
+\usepackage{amsmath}
+\RequirePackage{textcomp}
+%\RequirePackage{inconsolata}
+\RequirePackage{calc}
+\RequirePackage{caption}
+\RequirePackage{hyperref}
+\RequirePackage{cleveref}
+
+\RequirePackage{fancyvrb}
+\RequirePackage{listings}
+\RequirePackage{xcolor}
+
+\RequirePackage{xparse}
+\RequirePackage{subcaption}
+\end{code}
+
+Let me first tell you about the environments. There are three flavours of environments in LitCode, all of them
+being derived from \tt lstlisting \rm environment:
+
+\begin{enumerate}
+    \item \tt code \rm: Used when defining a new chunk. Caption and labels will be set for this environment.
+    Captions will be invisble so that no weird indentations or spaces are there between normal text and
+    listing. \verb|@<| and \verb|@>| are used to escape inside this environment so that we can refer to other
+    chunks. 
+    \item \tt oldcode \rm: Same as \tt code \rm but used when extending the definition of a previously defined
+    chunk. No caption and label is defined for this environment. 
+    \item \tt vcode \rm: Used for writing a purely verbatim piece of code. No captions, no labels, no escape characters.
+\end{enumerate}
+
+For these environments, I have defined a few variables which will allow us to set listing font, background
+color, margin and textwidth, although the latter two aren't used at all (they are just relics of a once
+complicated \tt .sty \rm file that I had). 
+
+\begin{code}[Variables in LitCode]
+@<$\langle$\textit{Variables in LitCode}$\rangle\equiv$@>
+\def\litcode{{LitCode}}
+\def\linewidth{\textwidth}
+
+\def\xleftmargin{10pt}
+\def\xrightmargin{0pt}
+
+\def\litcodefont{\fontfamily{SourceCodePro-TLF}\small}
+\def\codebg{yellow!15}
+\def\vcodebg{green!20}
+
+\end{code}
+
+I also wanted to enable `jumps' whenever I would click on reference + I wanted these references to be colored
+differently. Thats why I have set \tt colorlinks \rm as \tt true \rm and have set both \tt linkcolor \rm and
+\verb|\urlcolor| \rm to \tt red \rm. 
+
+\begin{code}[hyperref and url style setup]
+@<$\langle$\textit{hyperref and url style setup}$\rangle\equiv$@>
+\hypersetup{
+    colorlinks=true,
+    linkcolor=red,
+    urlcolor=red,
+    citecolor=red
+}
+
+\end{code}
+
+Thanks to the line below, case you are using a URL, it will be put in the same style as the surrounding text.
+\begin{oldcode}
+@<$\langle$\textit{hyperref and url style setup}$\rangle \thinspace +\!\!\equiv$@>
+\urlstyle{same}
+\end{oldcode}
+
+Now come the interesting chunks, which troubled me a lot --- definition of custom environments, caption and
+chunk listing style. I will begin with the queen --- the \tt code \rm environment.
+
+\begin{code}[code environment]
+@<$\langle$\textit{code environment}$\rangle\equiv$@>
+% Define code environment: Used when defining a chunk for the first time
+\lstnewenvironment{code}[1][]{
+    \lstset{
+\end{code}
+
+\coderef{code environment} takes in one argument which is used to set both the caption and label of the environment.
+Note how I am using \verb|\protect\detokenize{}| to make sure the formatting is not messed up. Do note that
+captions will be invisible so that we can have captions and code chunk indented by the same level. Also `fake
+captions' will be inserted to by \tt lweave \rm with proper formatting so that chunk definitions and
+extensions can be distinguished from each other.
+
+\begin{oldcode}
+@<$\langle$\textit{code environment}$\rangle \thinspace +\!\!\equiv$@>
+        caption={\protect\detokenize{#1}},
+        label={#1},
+\end{oldcode}
+
+We further extend \coderef{code environment} by setting \tt columns \rm to \tt fullflexible \rm so that the letters
+are nicely typeset (unlike in \tt fixed \rm column width). I have set the font to \verb|\ttfamily| --- you can
+change it to something else. \tt keepspaces \rm, and \tt breaklines \rm are used to make sure the indentation
+is not changed and the lines are wrapped if they go over margins, respectively. \tt upquote = true \rm ensure
+that double quotes are formatted as simple upquotes only (and not as `` and ''). \tt background \rm is used to
+set the background color via \verb|\codebg| variable: set it to any color you wish in the preamble.
+
+\begin{oldcode}
+@<$\langle$\textit{code environment}$\rangle \thinspace +\!\!\equiv$@>
+        columns=fullflexible,
+        basicstyle=\litcodefont,
+        keepspaces=true,
+        breaklines=true,
+        upquote=true,
+        backgroundcolor=\color{\codebg},
+\end{oldcode}
+
+The interesting part is the \tt escapeinside \rm variable, which is used to set the characters which will be
+used to escape inside the \tt lstlisting \rm environment. I have set these variables to \verb|@<| and
+\verb|@>|. To print these variables inside the environment, they need to be escaped themselves. Example:
+
+<<>>=
+@<@<@>
+@<@>@>
+@
+
+\begin{oldcode}
+@<$\langle$\textit{code environment}$\rangle \thinspace +\!\!\equiv$@>
+@<@<@>@<@>@>
+    }
+}{}
+
+\end{oldcode}
+
+We can define \tt oldcode \rm and \tt vcode \rm environments in a similar fashion with a few minor changes: in
+\tt oldcode \rm we will get rid of caption and label, and in \tt vcode \rm we will get rid of escape
+characters.
+
+\begin{code}[oldcode environment]
+@<$\langle$\textit{oldcode environment}$\rangle\equiv$@>
+% Define oldcode environment: To be used when extending an already defined chunk
+\lstnewenvironment{oldcode}[1][]{
+    \lstset{
+        columns=fullflexible,
+        basicstyle=\litcodefont,
+        keepspaces=true,
+        breaklines=true,
+        upquote=true,
+        backgroundcolor=\color{\codebg},
+@<@<@>@<@>@>
+    }
+}{}
+\end{code}
+
+\begin{code}[vcode environment]
+@<$\langle$\textit{vcode environment}$\rangle\equiv$@>
+% Verbatim code environment: Takes no captions, has no labels and won't get included in the listing. 
+% Purely verbatim!!
+\lstnewenvironment{vcode}[1][]{
+    \lstset{
+        columns=fullflexible,
+        basicstyle=\litcodefont,
+        keepspaces=true,
+        breaklines=true,
+        upquote=true,
+        backgroundcolor=\color{\vcodebg},
+    }
+}{}
+\end{code}
+
+We end this \tt .sty \rm file by defining the format in which we want to display captions in references and in
+listings. I have followed the style which had been used by Knuth and Ramsey:
+
+\begin{itemize}
+    \item $\langle$ name of the chunk $\rangle \equiv$: Used when defining a chunk for the first time
+    \item $\langle$ name of the chunk $\rangle \thinspace +\!\!\equiv$: Used when extending the definition of
+    a chunk
+    \item $\langle$ name of the chunk $\rangle$: Used when referencing a chunk
+\end{itemize}
+
+The first and third type of formatting is defined in \tt litcode.sty \rm itself. One can cook up a \LaTeX code
+which checks whether a chunk has been previously defined or not and accordingly format its captioning. I am
+not that clever. This decision (checking the \it freshness \rm of the chunk and formatting its caption) is
+done by \tt lweave \rm. 
+
+\begin{code}[Caption and Chunk Listing format]
+@<$\langle$\textit{Caption and Chunk Listing format}$\rangle\equiv$@>
+\DeclareCaptionFormat{codecaptionformat}
+{
+    \phantom{$\langle\textit{#3}\rangle\!\!\equiv$}
+}
+
+\captionsetup[lstlisting]{
+    format=codecaptionformat,
+    justification=raggedright,
+    singlelinecheck=off,
+    skip=-\baselineskip
+}
+
+\makeatletter
+\renewcommand\l@lstlisting[2]{\@dottedtocline{1}{0em}{2.3em}{\textit{#1}}{#2}}
+\makeatother
+
+\newcommand{\coderef}[1]{$\langle$\textit{\nameref{#1}}$\rangle$}
+%\newcommand{\coderef}[1]{$\langle$\textit{\nameref{#1}} \rm(p.~\pageref{#1})$\rangle$}
+\end{code}
+
+Note how in \verb|\DeclareCaptionFormat| I have set the caption under \verb|\phantom| command so that they are
+invisble and do not mess up the indentation. In \verb|\captionsetup| I have setup \tt skip \rm to
+\verb|-\baselineskip| so that the vertical space between a chunk and lines of normal text preceding it is not
+huge.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{linit.py}
+
+\tt linit.py \rm or simply \tt linit \rm, will be responsible for writing \tt litcode.sty \rm to a directory
+which is a passed to it as a command line argument. Of course of course, I can upload this styling file CTAN,
+but I do not think that this is anything ground-breaking, so I will keep it with myself.\\
+
+The first line of \tt linit.py \rm and all other Python scripts will begin with a shebang (\verb|#!|)
+followed by the path to the binary of python3 interpreter. All these scripts will be set as executables (\tt
+chmod +x \rm) and then moved to \tt ~/local/bin/ \rm so that we can run them from anywhere in the system
+without explicitely calling Python to execute them everytime.
+
+\begin{code}[linit.py]
+@<$\langle$\textit{linit.py}$\rangle\equiv$@>
+#!/usr/bin/python3
+import os
+import sys
+import time
+import subprocess as sbpr
+
+\end{code}
+
+The entire content of \tt litcode.sty \rm will be present inside \tt linit.py \rm as a multi-line raw string.
+Why a raw string? This is because this \tt .sty \rm file makes extensive use of backslash \verb|\|. I do not
+want to make things messy by escaping every backslash... Better to just use a raw string. :-)
+
+\begin{oldcode}
+@<$\langle$\textit{linit.py}$\rangle \thinspace +\!\!\equiv$@>
+litcode_sty_content = r'''
+@<\coderef{litcode.sty}@>
+'''
+
+\end{oldcode}
+
+\tt linit.py \rm will accept only a single command line argument which would be the name of the directory
+where \tt litcode.sty \rm is to be saved. The `entry-point' for our script will be the \tt main \rm function,
+where the command line arguments will be processed to get this directory name. If none is supplied, then the
+program should exit with an error code.
+
+\begin{oldcode}
+@<$\langle$\textit{linit.py}$\rangle \thinspace +\!\!\equiv$@>
+def main():
+    global litcode_sty_content
+    if len(sys.argv) <= 1:
+        print('Please supply a directory name')
+        exit(1)
+    directory = sys.argv[1]
+\end{oldcode}
+
+We can also ensure that the directory is made using \tt mkdir -p \rm. It won't do any harm to the directory's
+contents if it already exists.
+
+\begin{oldcode}
+@<$\langle$\textit{linit.py}$\rangle \thinspace +\!\!\equiv$@>
+    command = f'mkdir -p {directory}'
+    os.system(command)
+\end{oldcode}
+
+Finally, we write the raw string to \tt litcode.sty \rm placed under the directory supplied as a command line
+argument. We need the full path to \tt litcode.sty \rm which can easily be made by appending the name of the
+directory (relative to the current directory/position in the terminal), system path separator (which we get by
+\tt os.sep()\rm) and the string \verb|'litcode.sty'|. I have just used a formatted string, although these
+strings could also have been appended by \tt + \rm operator.
+
+\begin{oldcode}
+@<$\langle$\textit{linit.py}$\rangle \thinspace +\!\!\equiv$@>
+    full_path_to_sty = f'{directory}{os.sep}litcode.sty'
+    with open(full_path_to_sty, 'w') as fp:
+        fp.writelines(litcode_sty_content)
+
+main()
+\end{oldcode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{ldump.py}
+
+Tangling a chunk involves recursive expansion of all the references that are there in the chunk. The
+indentation of a reference must be appended while printing all the lines of the chunk it refers to. We also
+need to add some markers which tell a programmer from where a piece of code lies in the WEB files. We also
+need to ensure that proper whitespace conversion is done --- this is especially useful in the case of \tt
+Makefile \rm which accepts only tabs as valid indentation characters.\\
+
+Most of the traditional literate programming tools tangle a chunk by going through a file, making a dictionary
+of chunks and then expanding the required chunk recursively. What would happen if we need to tangle 2 chunks
+from the same file. Some computational power will be expended in setting up the dictionary twice. To prevent
+this `waste of computational power' (although in the 21st century, hardly anyone cares about it for such
+simple text processing job), I have written \tt ldump.py \rm. It will make a dicitionary of chunks which are
+present in the files which have been supplied to it as command line arguments. Then this dictionary will be
+printed and can be saved in a JSON file using the clobber operator, \tt > \rm. This JSON will be used by \tt
+ltangle \rm when tangling a piece of code. \\
+
+\textbf{NOTE:} If a chunk is defined in multiple files and have no relation to each other, give them different
+names. This will prevent \tt ltangle \rm and \tt lweave \rm from considering them as related to each other.\\
+
+We begin with the shebang line specifying the path of the python3 and import \tt os\rm, \tt sys\rm, \tt
+json \rm and \tt re \rm modules.
+
+\begin{code}[ldump.py]
+@<$\langle$\textit{ldump.py}$\rangle\equiv$@>
+#!/usr/bin/python3
+import os
+import sys
+import re
+import json
+
+\end{code}
+
+A pseudocode for \tt ldump.py \rm is presented in Algorithm~\ref{algo:ldump-working}:
+
+\begin{algorithm}
+
+Check if command line args have been supplied. \linebreak
+If yes: then start reading each file line by line \linebreak
+If not: then throw an error\\
+
+Go through the string and look lines satisfying the regex: \linebreak
+    \verb|(?<=^\coderef{).+?(?=}=\s*$)|\\
+
+Check if the chunk exists or not. If it is not their in the dictionary, then enter it. Else, we will append
+the lines in this chunk to the already existing lines in the dictionary.\\
+
+Add some metadata about the position of chunk boundaries in the web files.\\
+
+JSONify the dictionary and print it. Writing to the file will be taken care of by \tt > \rm operator.
+
+\caption{Pseudocode for \texttt{ldump.py}}
+\label{algo:ldump-working}
+\end{algorithm}
+
+We will be having a function \tt dumper \rm which will take in a list of files, read them line by line and
+create a dictionary of chunks, \tt chunkDict \rm. This dictionary will then be converted into a pretty-printed
+JSON string using \tt dumps \rm method in \tt json \rm package.
+
+\begin{oldcode}
+@<$\langle$\textit{ldump.py}$\rangle \thinspace +\!\!\equiv$@>
+def dumper(file_list):
+    chunkDict = dict()
+    for f in files:
+        @<\coderef{Fill chunkDict}@>
+    chunkJSON = json.dumps(chunkDict, indent = 4)
+    return chunkJSON
+
+\end{oldcode}
+
+Our entry point into the program will be \tt main() \rm which will see if the files have been supplied as
+command line args or not. If they exist, we will send this list to the \tt dumper \rm. The JSON string that it
+gets from the \tt dumper \rm will be printed on the screen.
+
+\begin{oldcode}
+@<$\langle$\textit{ldump.py}$\rangle \thinspace +\!\!\equiv$@>
+def main():
+    if len(sys.argv) <= 1:
+        print('No files provided')
+        exit(1)
+    file_list = sys.argv[1:]
+    json_str = dumper(file_list)
+    print(json_str)
+
+main()
+\end{oldcode}
+
+We now have to write some code which will write \tt chunkDict \rm. When reading a file, we need to keep track
+of the following:
+
+\begin{enumerate}
+    \item Line number of the current line being read.
+    \item Are we in a chunk or not?
+        \begin{itemize}
+            \item If not, then does this line defines a chunk? Is it really new or an old one?
+            \item If yes, then does this line refers to another chunk? Is there a \verb|@| in this line?
+            (which marks the end of a chunk's definition)
+        \end{itemize}
+\end{enumerate}
+
+We keep track of these conditions with the help of \verb|line_count|, \tt inChunk\rm, \tt
+encounteredReference\rm, and \tt encounteredStopChar\rm variables.
+
+\begin{code}[Fill chunkDict]
+@<$\langle$\textit{Fill chunkDict}$\rangle\equiv$@>
+line_count = 0
+inChunk = False
+encounteredReference = False
+encounteredStopChar = False
+
+\end{code}
+
+We will read all the lines of a file and store them in a list (\tt lines \rm) in one shot using \tt readlines
+\rm method. \tt chunkLines \rm will store the lines of a chunk as and when we encounter. It will be off-loaded
+into \tt chunkDict \rm.
+
+\begin{oldcode}
+@<$\langle$\textit{Fill chunkDict}$\rangle \thinspace +\!\!\equiv$@>
+with open(f, 'r') as fp:
+    lines = fp.readlines()
+chunkLines = []
+
+\end{oldcode}
+
+Using a \tt for \rm loop I am now going to iterate over \tt lines \rm. The first step in each iteration would
+be to increment \verb|line_count|.
+
+\begin{oldcode}
+@<$\langle$\textit{Fill chunkDict}$\rangle \thinspace +\!\!\equiv$@>
+for line in lines:
+    line_count += 1
+    @<\coderef{Fill chunkDict: Not in a chunk}@>
+    @<\coderef{Fill chunkDict: In a chunk}@>
+\end{oldcode}
+
+There will be two conditions. Either I will be in a chunk or I won't. If I am not in a chunk, \tt inChunk \rm
+is set to \tt False \rm, and I have to check whether the current line is the beginning of a chunk definition
+or not.
+
+\begin{code}[Fill chunkDict: Not in a chunk]
+@<$\langle$\textit{Fill chunkDict: Not in a chunk}$\rangle\equiv$@>
+if not inChunk:
+    chunkname = re.findall(r'(?<=^@<\coderef{).+?(?=}@>=\s*$)', line.strip())
+    if chunkname:
+        inChunk = True
+
+\end{code}
+
+I now need to check whether the chunk has been previously defined or not. This can be easily done with the use
+of \tt in \rm operator. Remember that \tt re.findall() \rm returns a list, so I need to set \tt chunkname \rm
+to the first element of the list that has been returned by \tt findall()\rm.
+
+\begin{oldcode}
+@<$\langle$\textit{Fill chunkDict: Not in a chunk}$\rangle \thinspace +\!\!\equiv$@>
+    chunkname = chunkname[0]
+    if chunkname not in chunkDict:
+        chunkDict[chunkname] = []
+        chunkLines = []
+        chunkLines.append(f'@->{chunkname}: Starts at line {line_count} in {f}\n')
+    else:
+        chunkLines = chunkDict[chunkname]
+        chunkLines.append(f'@->{chunkname}: Extended at line {line_count} in {f}\n')
+
+\end{oldcode}
+
+Note how I am introducing metadata beginning with \verb|@->| at the beginning of the chunk. \\
+
+I have to now deal with the condition in which I am inside a chunk. When inside a chunk, I need to check
+whether the current line contains a reference or a stop-character (signaling end of the chunk), and
+accordingly insert some metadata.
+
+\begin{code}[Fill chunkDict: In a chunk]
+@<$\langle$\textit{Fill chunkDict: In a chunk}$\rangle\equiv$@>
+else:
+    encounteredStopChar = (line.strip() == '@')
+    if encounteredStopChar:
+        chunkLines.append(f'@->{chunkname}: Ends at {line_count} in {f}\n')
+        chunkDict[chunkname] = chunkLines
+        inChunk = False
+        continue
+    else:
+        encounteredReference = re.findall(r'(?<=^@<\coderef{).+?(?=}@>\s*$)', line.strip())
+        if encounteredReference:
+            chunkLines.append(f'@->{chunkname}: Reference at line {line_count} in {f}\n')
+            chunkLines.append(line)
+            chunkLines.append(f'@->{chunkname}: Continues from line {line_count + 1} in {f}\n')
+        else:
+            chunkLines.append(line)
+\end{code}
+
+\section{Fibonacci Series}
+The C code presented in this section is responsible for printing the fibonacci series.\\
+
+I begin by writing the \tt Makefile \rm for building the program.
+\begin{code}[Makefile]
+@<$\langle$\textit{Makefile}$\rangle\equiv$@>
+CC := gcc -std=C99 -O0
+
+runfib: fibonacci.exe
+    ./fibonacci.exe 30
+
+fibonacci.exe: fibonacci.o
+    $(CC) fibonacci.o -o fibonacci.exe
+
+fibonacci.o: fibonacci.c
+    $(CC) -c fibonacci.c -o fibonacci.o
+\end{code}
+
+Now comes the fun part. Our code will have two parts: \coderef{Initialize variables} will be responsible for
+initializing the variables which will then be used by \coderef{Generate Fibonacci series till n terms} to generate
+the series till some $n$ number of terms. $n$ will be provided by the user as a command line argument.
+
+\begin{code}[fibonacci.c]
+@<$\langle$\textit{fibonacci.c}$\rangle\equiv$@>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(int argc, char **argv)
+{
+    @<\coderef{Initialize variables}@>
+    @<\coderef{Generate Fibonacci series till n terms}@>
+    fprintf(stdout, "Done\n");
+    return 0;
+}
+\end{code}
+
+To generate fibonacci series, we need three numbers: $a$, $b$, and $n$. $a$ and $b$ will be used to generate
+the terms of the series till $n$ terms. $n$ will be a command line argument. We will need to check whether $n$
+has been passed or not.
+
+\begin{code}[Initialize variables]
+@<$\langle$\textit{Initialize variables}$\rangle\equiv$@>
+int a, b, n;
+a = -1;
+b = 1;
+@<\coderef{Check cmd args and Initialize n}@>
+\end{code}
+
+\begin{code}[Check cmd args and Initialize n]
+@<$\langle$\textit{Check cmd args and Initialize n}$\rangle\equiv$@>
+if (argc < 2) {
+    fprintf(stderr, "Please provide `n' as a command line argument\n");
+    exit(1);
+}
+else {
+    n = atoi(argv[1]);
+}
+\end{code}
+
+We also need to make sure that $n$ is not less than zero. So, we will extend the definition of <<Check cmd
+args and Initialize n>>.
+
+\begin{oldcode}
+@<$\langle$\textit{Check cmd args and Initialize n}$\rangle \thinspace +\!\!\equiv$@>
+if (n < 0) {
+    fprintf(stderr, "n >= 0\n");
+    exit(1);
+}
+\end{oldcode}
+
+Finally, we write the \textit{generating} portion of our code: \coderef{Generate Fibonacci series till n terms}.
+
+\begin{code}[Generate Fibonacci series till n terms]
+@<$\langle$\textit{Generate Fibonacci series till n terms}$\rangle\equiv$@>
+for (int i = 0; i < n; ++i) {
+    fprintf(stdout, "%d ", a + b);
+    b = b + a;
+    a = b - a;
+}
+\end{code}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Printing Prime Numbers}
+
+In this example we are going to print prime numbers. Like in the previous example, we are going to begin by
+first define the rules by which \tt prime.c \rm is to be built.
+
+\begin{oldcode}
+@<$\langle$\textit{Makefile}$\rangle \thinspace +\!\!\equiv$@>
+CC := gcc -std=c99 -O0
+
+runprimes: primes.exe
+    ./primes.exe 30
+
+primes.exe: primes.o
+    $(CC) primes.o -o primes.exe
+
+prime.o: prime.c
+    $(CC) -c primes.c -o primes.o
+\end{oldcode}
+
+Now comes the interesting part: the C code which will print $n$ prime numbers. The core structure of our code
+will be as follows:
+
+\begin{code}[primes.c]
+@<$\langle$\textit{primes.c}$\rangle\equiv$@>
+#include <stdio.h>
+#include <stdlib.h>
+
+int isPrime(int);
+
+int main(int argc, char **argv)
+{
+    @<\coderef{Initialize n}@>
+    @<\coderef{Print prime numbers till n reaches 0}@>
+    return 0;
+}
+\end{code}
+
+
+Like in the previou example, $n$ will be supplied as a command line argument.
+
+\begin{code}[Initialize n]
+@<$\langle$\textit{Initialize n}$\rangle\equiv$@>
+int n;
+if (argc < 1) {
+    fprintf(stderr, "n must be supplied as a command line argument\n");
+    exit(1);
+}
+n = atoi(argv[1]);
+\end{code}
+
+We will have a loop in which n is decremented by 1 every time a prime number is encountered. Once it reaches
+0, the loop ends.
+
+\begin{code}[Print prime numbers till n reaches 0]
+@<$\langle$\textit{Print prime numbers till n reaches 0}$\rangle\equiv$@>
+int i = 0;
+while (n > 0) {
+    if (isPrime(i) == 0) {
+        fprintf(stdout, "%d ", i);
+        --n;
+    }
+    ++i;
+}
+fprintf(stdout, "Done\n");
+\end{code}
+
+In the loop, we are calling \tt isPrime() \rm to check whether the argument we have passed to it is a prime
+number or not. This is done by finding the number of divisors of the argument from 2 till
+$\frac{\text{argument}}{2}$. If the number of divisors is 0, then the argument is a prime number, else not.
+The edge cases are for 0 and 1, which can be dealt with a simple \tt if \rm conditional statement.
+
+\begin{code}[Check if i is prime or not]
+@<$\langle$\textit{Check if i is prime or not}$\rangle\equiv$@>
+int isPrime(int i)
+{
+    if (i == 0 || i == 1) {
+        return 1;
+    }
+    for (int d = 2; d <= (i / 2); ++d) {
+        if (i % d == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+\end{code}
+
+And we include it below \tt main() in \coderef{primes.c}.
+
+\begin{oldcode}
+@<$\langle$\textit{primes.c}$\rangle \thinspace +\!\!\equiv$@>
+@<\coderef{Check if i is prime or not}@>
+\end{oldcode}
+

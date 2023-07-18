@@ -1,7 +1,7 @@
 .PHONY: all clean
 
 all: $(wildcard *.tex) $(wildcard *.sty) $(wildcard *.bib)
-	pdflatex litcode.tex
+	texliveonfly litcode.tex
 	biber litcode
 	pdflatex litcode.tex
 	pdflatex litcode.tex
