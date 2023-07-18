@@ -6,7 +6,7 @@
 I will begin by defining the styling file which will be used by \LaTeX to style the chunks and references.
 This makes up \tt litcode \rm package. I will be honest --- I am not that good in \TeX and \LaTeX. Initially I
 took lots of help from ChatGPT to cook \tt litcode.sty \rm file. Later on, I decided to keep things simple,
-did some additions and deletions, and ended up with the current version of \tt litcode.sty \rm file.\\
+did some additions and deletions, and ended up with the current version of \tt litcode.sty \rm file.
 
 <<litcode.sty>>=
 <<Required packages>>
@@ -19,7 +19,7 @@ did some additions and deletions, and ended up with the current version of \tt l
 @
 
 After lots of hits and trials I ended up with the following list of packages which will be used by LitCode. A
-more clever user of \LaTeX can maybe add and delete a few packages from this chunk.
+more clever user of \LaTeX \thinspace can maybe add and delete a few packages from this chunk.
 
 <<Required packages>>=
 \RequirePackage[T1]{fontenc}
@@ -52,15 +52,18 @@ being derived from \tt lstlisting \rm environment:
     \item \tt vcode \rm: Used for writing a purely verbatim piece of code. No captions, no labels, no escape characters.
 \end{enumerate}
 
-For these environments, I have defined a few variables which will allow us to set background color, margin and
-textwidth, although the latter two aren't used at all (they are just relics of a once complicated \tt .sty \rm
-file that I had).
+For these environments, I have defined a few variables which will allow us to set listing font, background
+color, margin and textwidth, although the latter two aren't used at all (they are just relics of a once
+complicated \tt .sty \rm file that I had). 
 
 <<Variables>>=
 \def\litcode{{LitCode}}
 \def\linewidth{\textwidth}
+
 \def\xleftmargin{10pt}
 \def\xrightmargin{0pt}
+
+\def\litcodefont{\fontfamily{SourceCodePro-TLF}\small}
 \def\codebg{yellow!15}
 \def\vcodebg{green!20}
 
@@ -68,7 +71,7 @@ file that I had).
 
 I also wanted to enable `jumps' whenever I would click on reference + I wanted these references to be colored
 differently. Thats why I have set \tt colorlinks \rm as \tt true \rm and have set both \tt linkcolor \rm and
-\urlcolor \rm to \tt red \rm. 
+\verb|\urlcolor| \rm to \tt red \rm. 
 
 <<hyperref and url style setup>>=
 \hypersetup{
@@ -109,11 +112,11 @@ are nicely typeset (unlike in \tt fixed \rm column width). I have set the font t
 change it to something else. \tt keepspaces \rm, and \tt breaklines \rm are used to make sure the indentation
 is not changed and the lines are wrapped if they go over margins, respectively. \tt upquote = true \rm ensure
 that double quotes are formatted as simple upquotes only (and not as `` and ''). \tt background \rm is used to
-set the background color via \verb|\codebg| variable: set it to any color you wish in the preamble. \\
+set the background color via \verb|\codebg| variable: set it to any color you wish in the preamble.
 
 <<code environment>>=
         columns=fullflexible,
-        basicstyle=\ttfamily,
+        basicstyle=\litcodefont,
         keepspaces=true,
         breaklines=true,
         upquote=true,
@@ -213,3 +216,35 @@ huge.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{linit.py}
+
+\tt linit.py \rm or simply \tt linit \rm, will be responsible for writing \tt litcode.sty \rm to a directory
+which is a passed to it as a command line argument. Of course of course, I can upload this styling file CTAN,
+but I do not think that this is anything ground-breaking, so I will keep it with myself.\\
+
+The entire content of \tt litcode.sty \rm will be present inside \tt linit.py \rm as a multi-line string.
+
+<<linit.py>>=
+#!/usr/bin/python3
+import os
+import sys
+import time
+import subprocess as sbpr
+
+litcode_sty_content = r'''
+<<litcode.sty>>
+'''
+
+def main():
+    global litcode_sty_content
+    if len(sys.argv) <= 1:
+        print('Please supply a directory name')
+        exit(1)
+    directory = sys.argv[1]
+    command = f'mkdir -p {directory}'
+    os.system(command)
+    full_path_to_sty = f'{directory}{os.sep}litcode.sty'
+    with open(full_path_to_sty, 'w') as fp:
+        fp.writelines(litcode_sty_content)
+
+main()
+@

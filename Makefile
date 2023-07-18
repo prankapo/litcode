@@ -13,21 +13,21 @@ boot: $(wildcard bootstrap/*)
 
 src: $(wildcard web/*.web)
 	ldump $(WEB)/source_code.web > $(WEB)/src.json
-	ltangle -i $(WEB)/src.json -R linit.py -cc '#' > src/linit.py
+	ltangle -i $(WEB)/src.json -R linit.py > src/linit.py
 	ltangle -i $(WEB)/src.json -R ldump.py -cc '#' > src/ldump.py
 	ltangle -i $(WEB)/src.json -R ltangle.py -cc '#' > src/ltangle.py
 	ltangle -i $(WEB)/src.json -R lweave.py -cc '#' > src/lweave.py
 
 install: $(wildcard src/*.py)
+	cp src/linit.py src/linit.tmp
 	cp src/ldump.py src/ldump.tmp
 	cp src/ltangle.py src/ltangle.tmp
 	cp src/lweave.py src/lweave.tmp
-	cp src/linit.py src/linit.tmp
 	chmod +x src/*.tmp
+	cp src/linit.tmp ~/local/bin/linit
 	cp src/ldump.tmp ~/local/bin/ldump
 	cp src/ltangle.tmp ~/local/bin/ltangle
 	cp src/lweave.tmp ~/local/bin/lweave
-	cp src/linit.tmp ~/local/bin/linit
 	rm src/*.tmp
 
 examples: $(wildcard web/*.web)
@@ -39,8 +39,8 @@ examples: $(wildcard web/*.web)
 documentation: $(wildcard web/*.web)
 	linit $(DOC)
 	lweave web/litcode.web > documentation/litcode.tex
-	lweave web/introduction.web web/source_code.web web/examples/.web > $(DOC)/content.tex 
-	cp web/references.web > $(DOC)/references.bib
+	lweave web/introduction.web web/source_code.web web/examples.web > $(DOC)/content.tex 
+	cp web/references.web $(DOC)/references.bib
 
 build: buildtex buildex
 

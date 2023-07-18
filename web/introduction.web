@@ -1,7 +1,7 @@
 \section{Introduction}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Artistic Nature of Computer Programs}
+\subsection{Artistic Nature of Computer Programs}
 
 The study of computers and computations is a science. However, computer programming is an art. To understand
 the difference between art and science we can read the following discussion on the subject by John Stuart
@@ -33,7 +33,7 @@ a drone to take the photograph of forest. However, humans will still continue to
 just because doing so gives us pleasure.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Structured Programming Methodology and Literate Programming}
+\subsection{Structured Programming Methodology and Literate Programming}
 
 Structured programming methodology arose as a way to improve clarity, quality and development time of
 programs. It involves constructing a program using the three basic constructs --- sequential statements which
@@ -88,40 +88,42 @@ It was an improvement over \tt WEB \rm and \tt CWEB \rm thanks to its simplicity
 markup it used to enclose and refer to code chunks. Code chunks were encoded with \texttt{<<Name of the
 chunk>>=} and \texttt{@}. You could refer to another chunk from inside a chunk by enclosing the name of the
 reference inside double angles. A short example of a literate program written in the \tt noweb \rm style is
-shown in \cite{fig:noweb-example}.
+shown in .%\cite{fig:noweb-example}.
 
-\begin{centering}
-\fbox{\begin{figure}
+%\begin{centering}
+%\fbox{\begin{figure}
+%\begin{Verbatim}
 %source.web
-<<hello.c>> will be used to print `Hello world!' on the terminal a 100 times.
+%< <hello.c> > will be used to print `Hello world!' on the terminal a 100 times.
 
-<<hello.c>>=
-#include <stdio.h>
+%< <hello.c> >=
+%#include <stdio.h>
 
-int main()
-{
-    <<for loop>>
-    return 0;
-}
-@
+%int main()
+%{
+%    < <for loop> >
+%    return 0;
+%}
+%@
 
-The for loop below will execute the \tt fprintf \rm statement inside it 100 times.
+%The for loop below will execute the \tt fprintf \rm statement inside it 100 times.
 
-<<for loop>>=
-for (int i = 0; i < 100; ++i) {
-    fprintf(stdout, "Hello, world!\n");
-}
-@
-\caption{A very simple example of literate programming using \tt noweb \rm}
-\label{fig:noweb-example}
-\end{figure}}
-\end{centering}
+%< <for loop> >=
+%for (int i = 0; i < 100; ++i) {
+%    fprintf(stdout, "Hello, world!\n");
+%}
+%@
+%\caption{A very simple example of literate programming using \tt noweb \rm}
+%\label{fig:noweb-example}
+%\end{Verbatim}
+%\end{figure}}
+%\end{centering}
 
 In the terminal you will type \tt notangle source.web -Rhello.c > hello.c \rm to extract the source code. To
 produce a \LaTeX file, you will execute \tt noweave \rm : \tt noweave source.web -latex > source.tex \rm.\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Did Literate Programming take off?}
+\subsection{Did Literate Programming take off?}
 
 In a way, yes. We have got Jupyter Notebooks and Mathematica, which provide \it Notebook \rm interfaces where
 you write your code like you usually do but intersperse it with chunks of markdown text explaining it. It has
@@ -141,7 +143,7 @@ releases are done at such a fast pace.'' --- a statement which I found to be tru
 corporate.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Why then another literate programming tool?}
+\subsection{Why then another literate programming tool?}
 
 I could have used \tt noweb \rm but I suffer from NIH - `Not Invented Here' syndrome. The \tt -L \rm in \tt
 notangle \rm didn't seem to respect the indentation of reference in parent chunk which is not good for Python

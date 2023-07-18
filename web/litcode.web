@@ -15,7 +15,10 @@
 \usepackage{litcode}
 \usepackage{verbatim}
 
-\def\codebg{white}
+\usepackage[style=ieee,natbib=false,mcite=false,backend=biber]{biblatex}
+\addbibresource{references.bib}
+
+\def\codebg{yellow!10}
 \def\vcodebg{white}
 
 \begin{document}
@@ -29,8 +32,6 @@
 \lstlistoflistings
 
 \newpage
-\bibliographystyle{plainnat}
-\setcitestyle{numbers}
-\bibliography{references}
+\printbibliography
 
 \end{document}
