@@ -9,8 +9,8 @@ took lots of help from ChatGPT to cook \tt litcode.sty \rm file. Later on, I dec
 did some additions and deletions, and ended up with the current version of \tt litcode.sty \rm file.
 
 <<litcode.sty>>=
-<<Required packages>>
-<<Variables>>
+<<Packages required by LitCode>>
+<<Variables in LitCode>>
 <<hyperref and url style setup>>
 <<code environment>>
 <<oldcode environment>>
@@ -21,7 +21,7 @@ did some additions and deletions, and ended up with the current version of \tt l
 After lots of hits and trials I ended up with the following list of packages which will be used by LitCode. A
 more clever user of \LaTeX \thinspace can maybe add and delete a few packages from this chunk.
 
-<<Required packages>>=
+<<Packages required by LitCode>>=
 \RequirePackage[T1]{fontenc}
 \usepackage{amsmath}
 \RequirePackage{textcomp}
@@ -56,7 +56,7 @@ For these environments, I have defined a few variables which will allow us to se
 color, margin and textwidth, although the latter two aren't used at all (they are just relics of a once
 complicated \tt .sty \rm file that I had). 
 
-<<Variables>>=
+<<Variables in LitCode>>=
 \def\litcode{{LitCode}}
 \def\linewidth{\textwidth}
 
@@ -221,7 +221,10 @@ huge.
 which is a passed to it as a command line argument. Of course of course, I can upload this styling file CTAN,
 but I do not think that this is anything ground-breaking, so I will keep it with myself.\\
 
-The entire content of \tt litcode.sty \rm will be present inside \tt linit.py \rm as a multi-line string.
+The first line of \tt linit.py \rm and all other Python scripts will begin with a commented bang (\verb|#!|)
+followed by the path to the binary of python3 interpreter. All these scripts will be set as executables (\tt
+chmod +x \rm) and then moved to \tt ~/local/bin/ \rm so that we can run them from anywhere in the system
+without explicitely calling Python to execute them everytime.
 
 <<linit.py>>=
 #!/usr/bin/python3
@@ -230,21 +233,52 @@ import sys
 import time
 import subprocess as sbpr
 
+@
+
+The entire content of \tt litcode.sty \rm will be present inside \tt linit.py \rm as a multi-line raw string.
+Why a raw string? This is because this \tt .sty \rm file makes extensive use of backslash \verb|\|. I do not
+want to make things messy by escaping every backslash... Better to just use a raw string. :-)
+
+<<linit.py>>=
 litcode_sty_content = r'''
 <<litcode.sty>>
 '''
 
+@
+
+\tt linit.py \rm will accept only a single command line argument which would be the name of the directory
+where \tt litcode.sty \rm is to be saved. The `entry-point' for our script will be the \tt main \rm function,
+where the command line arguments will be processed to get this directory name. If none is supplied, then the
+program should exit with an error code.
+
+<<linit.py>>=
 def main():
     global litcode_sty_content
     if len(sys.argv) <= 1:
         print('Please supply a directory name')
         exit(1)
     directory = sys.argv[1]
+@
+
+We can also ensure that the directory is made using \tt mkdir -p \rm. It won't do any harm to the directory's
+contents if it already exists.
+
+<<linit.py>>=
     command = f'mkdir -p {directory}'
     os.system(command)
+@
+
+Finally, we write the raw string to \tt litcode.sty \rm placed under the directory supplied as a command line
+argument. We need the full path to \tt litcode.sty \rm which can easily be made by appending the name of the
+directory (relative to the current directory/position in the terminal), system path separator (which we get by
+\tt os.sep()\rm) and the string \verb|'litcode.sty'|. I have just used a formatted string, although these
+strings could have been appended by \tt + \rm operator also.
+
+<<linit.py>>=
     full_path_to_sty = f'{directory}{os.sep}litcode.sty'
     with open(full_path_to_sty, 'w') as fp:
         fp.writelines(litcode_sty_content)
 
 main()
 @
+
