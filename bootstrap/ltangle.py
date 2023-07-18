@@ -33,7 +33,7 @@ def expandref(chunkDict, reference):
 def main():
     dumpfile = str()
     reference = str()
-    commentchar = '#'
+    commentchar = None
     usetabs = False
     whitespace_conv_num = 4
     if '-i' in sys.argv:
@@ -87,9 +87,11 @@ def main():
             if indentation_depth:
                 new_indentation = ' ' * (indentation_depth * whitespace_conv_num)
                 line = new_indentation + line.lstrip()
-        
         if line.lstrip().startswith('@->'):
-            line = line.replace('@->', commentchar, 1)
+            if commentchar is not None:
+                line = line.replace('@->', commentchar, 1)
+            else:
+                continue
         lines.append(line)
     codeLines = lines
 
