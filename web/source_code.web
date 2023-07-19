@@ -83,7 +83,7 @@ differently. Thats why I have set \tt colorlinks \rm as \tt true \rm and have se
 
 @
 
-Thanks to the line below, case you are using a URL, it will be put in the same style as the surrounding text.
+Thanks to the line below, if you are using a URL, it will be put in the same style as the surrounding text.
 <<hyperref and url style setup>>=
 \urlstyle{same}
 @

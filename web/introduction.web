@@ -142,7 +142,7 @@ the program could have been written using noweb markup-style as follows:
 int main(int argc, char **argv)
 {
     <<Initialize variables>>
-    <<Generate Fibonacci series till n terms>>
+    <<Generate Fibonacci sequence till n terms>>
     fprintf(stdout, "Done\n");
     return 0;
 }
