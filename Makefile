@@ -47,7 +47,7 @@ build: buildtex buildex
 buildtex: $(DOC)/litcode.tex $(DOC)/references.bib
 	(cd documentation; make all)
 
-buildex: $(wildcard examples/*.c) examples/Makefile
+runex: $(wildcard examples/*.c) examples/Makefile
 	(cd examples;make runfib; make runprimes)
 
 clean:
