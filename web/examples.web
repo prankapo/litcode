@@ -158,7 +158,7 @@ int isPrime(int i)
 }
 @
 
-And we include it below \tt main() in <<primes.c>>.
+And we include it below \tt main() \rm in <<primes.c>>.
 
 <<primes.c>>=
 <<Check if i is prime or not>>
@@ -172,4 +172,34 @@ One more thing we should do is to write rules for cleaning the directory.
 
 clean: $(wildcard *.o) $(wildcard *.exe) $(wildcard *.out)
     rm -f $^
+@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Tangling and Weaving the Examples}
+
+With our example codes now written, it is now time to tangle and weave them. Before tangling, we run \tt ldump
+\rm to make a dump of the chunks in \texttt{example.web}. Then we can use \tt ltangle \rm to get out the
+source code.
+
+<<>>=
+$ ldump examples.web > examples.json
+$ ltangle -i examples.json -R fibonacci.c -cc '//' > ../examples/fibonacci.c
+$ ltangle -i examples.json -R primes.c -cc '//' > ../examples/primes.c
+$ ltangle -i examples.json -R Makefile -cc '#' -ut 4 > ../examples/Makefile
+@
+
+To run this code, we can move to \tt examples/ \rm and run the \verb|make runfib| and \verb|make runprimes| to
+print the first 30 terms of Fibonacci series and first 30 prime numbers, respectively.\\
+
+To weave the documentation, simply run:
+<<>>=
+$ lweave examples.web > documentation/examples.tex
+@
+
+Of course, you will need to have \tt litcode.sty \rm and a main container file from where you can
+\verb|\input| the contents of \texttt{examples.tex}. The former can be arranged, by running \texttt{linit}.
+For the latter, you will need to set up the container \texttt{tex} yourself.
+
+<<>>=
+$ linit documentation/
 @
