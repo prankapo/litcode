@@ -1,0 +1,18 @@
+LitCode 0.2.1 - Change in Setup and Installation
+
+* Most files have been reorganized. The scripts will now be installed as a Python a package, configurations of
+  which are being handled by setup.py in the parent directory.
+* Bootstrap procedure has been modified. build.sh has been deleted. Instead of 'installing' bootstrap by
+  moving code to a hardcoded PATH, we are directly executing the code present in the bootstrap/ directory.
+* Each script has its own web file, except for setup.py, litcode/__init__.py and the examples.
+* The build process, which runs when you will type `make all`, is as follows:
+  - web files containing the src code of various scripts + setup code are clubbed together into a single web
+    file named source_code.web. 
+  - Using the scripts under bootstrap/, we tangle source_web to generate the required source files.
+  - Using pip we install the package. 
+  - We clean the directories and now build using the the version of LitCode which has been installed by pip.
+    This makes sure that the package has really been installed and is working properly.
+  - Documentation is built is texliveonfly (to install missing packages), biber, and pdflatex.
+  - PDF is converted to HTML using pdf2htmlEX.
+* Makefile has also been updated. If you wish to uninstall this version of LitCode, simply type 'make
+  uninstall' and type 'Y' when pip asks for confirmation.
