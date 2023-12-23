@@ -5,33 +5,22 @@ chunks begin with `<<Name of the chunk>>=`, end with `@`, and can be referenced,
 from a normal piece of text by enclosing the name of the chunk between `<<` and `>>`.  
 
 # System Requirements
+Hardware:
+* Anything 64-bit will work
 
-The program was developed on a machine running Ubuntu 22.04, and, therefore, I have assumed that you will be
-running a Linux system (or WSL or something). With most Linux distros, you generally get some version of
-Python 3. The program which I have written doesn't require any system-breaking methods, so any version of
-Python 3 > 3.8 should work fine. You will also need to have LaTeX, `texliveonfly`, and `pdf2htmlEX` installed
-in your system. Finally, you need to have a `~/local/bin` directory which you have set to path in your bashrc file.
+Software:
+* Some *nix environment, preferrably Linux or WSL2
+* gcc: For building and running the examples
+* Python 3.8 or above along with pip: For installation and building the source and documentation
+* latex: For generating the PDF
+* texliveonfly: For installing missing LaTeX packages
+* pdf2htmlEX: For converting a PDF to HTML
 
 # Installation
-
 To install LitCode, run:
 
 ```bash
-make install
-```
-
-Once installed, you can run the weave the documentation:
-
-```bash
-make documentation
-make buildtex
-```
-
-You can build the examples that are there in the documentation:
-
-```bash
-make examples
-make runex
+make all
 ```
 
 # Example Usage

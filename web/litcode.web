@@ -21,6 +21,9 @@
 \usepackage[style=ieee,natbib=false,mcite=false,backend=biber]{biblatex}
 \addbibresource{references.bib}
 
+% For printing out the directory structure
+\usepackage{forest}
+
 \def\codebg{yellow!10}
 \def\vcodebg{white}
 
@@ -35,9 +38,13 @@
 \input{content.tex}
 
 \newpage
+\phantomsection
+\addcontentsline{toc}{section}{Listings}
 \lstlistoflistings
 
 \newpage
+\phantomsection
+\addcontentsline{toc}{section}{References}
 \printbibliography
 
 \end{document}
