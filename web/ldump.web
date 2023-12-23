@@ -79,7 +79,6 @@ def main():
     json_str = dumper(file_list)
     print(json_str)
 
-main()
 @
 
 We now have to write some code which will write \tt chunkDict \rm. When reading a file, we need to keep track

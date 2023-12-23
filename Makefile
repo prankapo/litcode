@@ -24,7 +24,6 @@ all:
 	@echo "Done.\n"
 	@echo "Building the documentation..."
 	-$(MAKE) buildtex
-	-$(MAKE) buildtex
 	@echo "Done.\n"
 	@echo "Running the examples for your satisfaction..."
 	$(MAKE) runex

@@ -13,7 +13,7 @@ import re
 
 Again, \tt main \rm will be our entry point in this program. \tt lweave \rm should read all the files that
 have been passed to it as command-line arguments, club together the lines making them, and transpile them to
-valid \LaTeX code. This transpilation will be done by a function named \tt transpiler \rm.
+valid \LaTeX{} code. This transpilation will be done by a function named \tt transpiler \rm.
 
 <<lweave.py>>=
 
@@ -23,7 +23,6 @@ def transpiler(lines):
 def main():
     <<lweave: main>>
 
-main()
 @
 
 First let us get <<lweave: main>> out of the way. If no files are provided to it, \tt lweave \rm should fail.

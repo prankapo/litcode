@@ -53,7 +53,6 @@ the command-line arguments.
 def main():
     <<ltangle: main>>
 
-main()
 @
 
 So, this would be the core structure of \tt ltangle\rm. Let's start writing <<ltangle: expandref>> as that is

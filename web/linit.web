@@ -62,5 +62,4 @@ strings could also have been appended by \tt + \rm operator.
     with open(full_path_to_sty, 'w') as fp:
         fp.writelines(litcode_sty_content)
 
-main()
 @

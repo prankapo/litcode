@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'litcode',
-    version = '0.2.1b',
+    version = '0.2.2b',
 
     packages = find_packages(),
 

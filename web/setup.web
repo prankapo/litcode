@@ -36,7 +36,7 @@ be installed. Let me define the name of the package and version number:
 
 setup(
 	name = 'litcode',
-	version = '0.1.0',
+	version = '0.2.2b',
 
 @
 
