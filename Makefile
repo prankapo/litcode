@@ -107,7 +107,7 @@ runex: $(wildcard examples/*.c) examples/Makefile
 clean:
 	-rm web/*.json 
 	-rm web/source_code.web
-	-rm -rf litcode examples documentation
+	-rm -rf litcode setup.py examples documentation
 	-rm -rf litcode.egg-info
 	-rm -rf build
 
