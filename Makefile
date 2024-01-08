@@ -8,7 +8,7 @@ SHELL := /usr/bin/bash
 
 all:
 	@echo "Performing initial tangling of web files using bootstrap code..."
-	$(MAKE) tangle
+	$(MAKE) boot
 	@echo "Done.\n"
 	@echo "Installing using pip..."
 	$(MAKE) install
@@ -28,30 +28,31 @@ all:
 	@echo "Done.\n"
 
 # This part is for generating the 'raw' source files
-tangle: web/source_code.web src examples
-
-# club_web: Clubs serveral web files containing the source code into a single file named source_code.web
-web/source_code.web: web/styling_file.web web/linit.web web/ltangle.web web/lweave.web web/setup.web
-	cd web && \
-	echo -e "\\section{Source Code}\n" > source_code.web && \
-	cat styling_file.web \
-	    linit.web \
-	    ldump.web \
-	    ltangle.web \
-	    lweave.web \
-	    setup.web \
-	    >> source_code.web
-	-echo "Clubbing done."
-
-src: $(wildcard web/*.web) web/source_code.web
+boot: 
 	mkdir -p litcode
-	python3 $(BOOT)/ldump.py $(WEB)/source_code.web > $(WEB)/src.json
+	python3 $(BOOT)/ldump.py $(WEB)/setup.web > $(WEB)/src.json
 	python3 $(BOOT)/ltangle.py -i $(WEB)/src.json -R setup.py > setup.py
 	python3 $(BOOT)/ltangle.py -i $(WEB)/src.json -R __init__.py > litcode/__init__.py
-	python3 $(BOOT)/ltangle.py -i $(WEB)/src.json -R linit.py > litcode/linit.py
+	python3 $(BOOT)/ldump.py $(WEB)/plsty.web $(WEB)/styling_file.web > $(WEB)/src.json
+	python3 $(BOOT)/ltangle.py -i $(WEB)/src.json -R plsty.py > litcode/plsty.py
+	python3 $(BOOT)/ldump.py $(WEB)/ldump.web $(WEB)/ltangle.web $(WEB)/lweave.web > $(WEB)/src.json
 	python3 $(BOOT)/ltangle.py -i $(WEB)/src.json -R ldump.py > litcode/ldump.py
 	python3 $(BOOT)/ltangle.py -i $(WEB)/src.json -R ltangle.py > litcode/ltangle.py
 	python3 $(BOOT)/ltangle.py -i $(WEB)/src.json -R lweave.py > litcode/lweave.py
+
+tangle: src
+
+src:
+	mkdir -p litcode
+	ldump $(WEB)/setup.web > $(WEB)/src.json
+	ltangle -i $(WEB)/src.json -R setup.py > setup.py
+	ltangle -i $(WEB)/src.json -R __init__.py > litcode/__init__.py
+	ldump $(WEB)/plsty.web $(WEB)/styling_file.web > $(WEB)/src.json
+	ltangle -i $(WEB)/src.json -R plsty.py > litcode/plsty.py
+	ldump $(WEB)/ldump.web $(WEB)/ltangle.web $(WEB)/lweave.web > $(WEB)/src.json
+	ltangle -i $(WEB)/src.json -R ldump.py > litcode/ldump.py
+	ltangle -i $(WEB)/src.json -R ltangle.py > litcode/ltangle.py
+	ltangle -i $(WEB)/src.json -R lweave.py > litcode/lweave.py
 
 install: $(wildcard litcode/*.py)
 	python3 -m pip install .
@@ -59,11 +60,17 @@ install: $(wildcard litcode/*.py)
 # weave: weaving the documentation
 weave: documentation buildtex
 
-documentation: $(wildcard web/*.web) web/source_code.web
+documentation: $(wildcard web/*.web)
 	mkdir -p documentation
-	linit $(DOC)
-	lweave web/litcode.web > documentation/litcode.tex
-	lweave web/introduction.web web/source_code.web > $(DOC)/content.tex 
+	plsty $(DOC)
+	lweave $(WEB)/litcode.web > $(DOC)/litcode.tex
+	lweave $(WEB)/introduction.web > $(DOC)/introduction.tex
+	lweave $(WEB)/ldump.web > $(DOC)/ldump.tex
+	lweave $(WEB)/ltangle.web > $(DOC)/ltangle.tex
+	lweave $(WEB)/lweave.web > $(DOC)/lweave.tex
+	lweave $(WEB)/styling_file.web > $(DOC)/styling_file.tex
+	lweave $(WEB)/plsty.web > $(DOC)/plsty.tex
+	lweave $(WEB)/setup.web > $(DOC)/setup.tex
 	cp web/references.web $(DOC)/references.bib
 
 # buildtex: compile the PDF
@@ -92,7 +99,8 @@ buildtex-fast: $(DOC)/litcode.tex $(DOC)/references.bib
 clean:
 	-rm web/*.json 
 	-rm web/source_code.web
-	-rm -rf litcode setup.py documentation
+	-rm -rf litcode setup.py
+	-find documentation/ ! -name 'litcode.pdf' -type f -exec rm -f {} +
 	-rm -rf litcode.egg-info
 	-rm -rf build
 

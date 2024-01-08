@@ -1,12 +1,7 @@
-LitCode 0.2.201
+LitCode 0.2.202 - Changes in TeX primitives, Introduction of plsty.py
 
-* Split between actual source code and Examples
-A person using literate programming might not be interested in using LaTeX; they might be using in more shiny
-tools like Markdown or Asciidoc or whatever. And it is understandable: not every gun makes the same tune.
-Therefore, in this version, I have put the examples separately in an `examples` directory, away from the
-source files. Makefile has also been changed. At present, no examples are being either tangled or weaved. 
-
-* Cosmetic changes to the documentation: Font-size of 9pt, and geometry of the margins has  been reset.
-  Furthermore, background of code is now white and not yellow. 
-
-* PDF doc won't be converted to HTML.
+* Basic TeX primitive like \\tt and \\it have been replaced with \\texttt{} and \\textit{}
+* linit.py renamed to plsty.py. Source code is in plsty.web. This would be responsible for printing
+  litcode.sty
+* documentation/litcode.pdf is not getting deleted upon cleaning up the directory. This will allow people to
+  read the source code without installing the package.

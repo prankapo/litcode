@@ -36,7 +36,7 @@ be installed. Let me define the name of the package and version number:
 
 setup(
 	name = 'litcode',
-	version = '0.2.2b',
+	version = '0.2.202',
 
 @
 
@@ -50,7 +50,7 @@ Now, I will define the entry points for various command line invocations of the 
 <<setup.py>>=
 	entry_points = {
 		'console_scripts' : [
-			'linit=litcode.linit:main',
+			'plsty=litcode.plsty:main',
 			'ldump=litcode.ldump:main',
 			'ltangle=litcode.ltangle:main',
 			'lweave=litcode.lweave:main'

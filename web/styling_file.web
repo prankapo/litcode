@@ -1,9 +1,9 @@
 \subsection{Styling file}
 
-I will begin by defining the styling file which will be used by \LaTeX to style the chunks and references.
-This makes up \tt litcode \rm package. I will be honest --- I am not that good in \TeX and \LaTeX. Initially I
-took lots of help from ChatGPT to cook \tt litcode.sty \rm file. Later on, I decided to keep things simple,
-did some additions and deletions, and ended up with the current version of \tt litcode.sty \rm file.
+\texttt{litcode.sty} is the styling file which will be used by \LaTeX to style the chunks and references. I
+will be honest --- I am not that good in \TeX and \LaTeX. Initially I took lots of help from ChatGPT to cook
+up this file. Later on, I decided to keep things simple, did some additions and deletions, and
+ended up with the current version of \litcode{litcode.sty} file.
 
 <<litcode.sty>>=
 <<Packages required by LitCode>>
@@ -37,21 +37,21 @@ more clever user of \LaTeX \thinspace can maybe add and delete a few packages fr
 @
 
 Let me first tell you about the environments. There are three flavours of environments in LitCode, all of them
-being derived from \tt lstlisting \rm environment:
+being derived from \texttt{lstlisting} environment:
 
 \begin{enumerate}
-    \item \tt code \rm: Used when defining a new chunk. Caption and labels will be set for this environment.
+    \item \texttt{code}: Used when defining a new chunk. Caption and labels will be set for this environment.
     Captions will be invisble so that no weird indentations or spaces are there between normal text and
     listing. \verb|@<| and \verb|@>| are used to escape inside this environment so that we can refer to other
     chunks. 
-    \item \tt oldcode \rm: Same as \tt code \rm but used when extending the definition of a previously defined
+    \item \texttt{oldcode}: Same as \tt code \rm but used when extending the definition of a previously defined
     chunk. No caption and label is defined for this environment. 
-    \item \tt vcode \rm: Used for writing a purely verbatim piece of code. No captions, no labels, no escape characters.
+    \item \texttt{vcode}: Used for writing a purely verbatim piece of code. No captions, no labels, no escape characters.
 \end{enumerate}
 
 For these environments, I have defined a few variables which will allow us to set listing font, background
 color, margin and textwidth, although the latter two aren't used at all (they are just relics of a once
-complicated \tt .sty \rm file that I had). 
+complicated \texttt{.sty} file that I had). 
 
 <<Variables in LitCode>>=
 \def\litcode{LitCode}
@@ -66,9 +66,9 @@ complicated \tt .sty \rm file that I had).
 
 @
 
-I also wanted to enable `jumps' whenever I would click on reference + I wanted these references to be colored
-differently. Thats why I have set \tt colorlinks \rm as \tt true \rm and have set both \tt linkcolor \rm and
-\verb|\urlcolor| \rm to \tt red \rm. 
+I also wanted to enable `jumps' whenever I would click on reference. I also wanted these references to be
+colored differently. Thats why I have set \texttt{colorlinks} as \texttt{true} and have set both
+\texttt{linkcolor} and \verb|\urlcolor| to \texttt{red}. 
 
 <<hyperref and url style setup>>=
 \hypersetup{
@@ -86,7 +86,7 @@ Thanks to the line below, if you are using a URL, it will be put in the same sty
 @
 
 Now come the interesting chunks, which troubled me a lot --- definition of custom environments, caption and
-chunk listing style. I will begin with the queen --- the \tt code \rm environment.
+chunk listing style. I will begin with the queen --- the \texttt{code} environment.
 
 <<code environment>>=
 % Define code environment: Used when defining a chunk for the first time
@@ -97,7 +97,7 @@ chunk listing style. I will begin with the queen --- the \tt code \rm environmen
 <<code environment>> takes in one argument which is used to set both the caption and label of the environment.
 Note how I am using \verb|\protect\detokenize{}| to make sure the formatting is not messed up. Do note that
 captions will be invisible so that we can have captions and code chunk indented by the same level. Also `fake
-captions' will be inserted to by \tt lweave \rm with proper formatting so that chunk definitions and
+captions' will be inserted to by \texttt{lweave} with proper formatting so that chunk definitions and
 extensions can be distinguished from each other.
 
 <<code environment>>=
@@ -105,12 +105,13 @@ extensions can be distinguished from each other.
         label={#1},
 @
 
-We further extend <<code environment>> by setting \tt columns \rm to \tt fullflexible \rm so that the letters
-are nicely typeset (unlike in \tt fixed \rm column width). I have set the font to \verb|\ttfamily| --- you can
-change it to something else. \tt keepspaces \rm, and \tt breaklines \rm are used to make sure the indentation
-is not changed and the lines are wrapped if they go over margins, respectively. \tt upquote = true \rm ensure
-that double quotes are formatted as simple upquotes only (and not as `` and ''). \tt background \rm is used to
-set the background color via \verb|\codebg| variable: set it to any color you wish in the preamble.
+We further extend <<code environment>> by setting \texttt{columns} to \texttt{fullflexible} so that the
+letters are nicely typeset (unlike in \texttt{fixed} column width). I have set the font to \verb|\ttfamily|
+--- you can change it to something else. \texttt{keepspaces}, and \texttt{breaklines} are used to make sure
+the indentation is not changed and the lines are wrapped if they go over margins, respectively.
+\texttt{upquote = true} ensure that double quotes are formatted as simple upquotes only (and not as `` and
+''). \texttt{background} is used to set the background color via \verb|\codebg| variable: set it to any color
+you wish in the preamble.
 
 <<code environment>>=
         columns=fullflexible,
@@ -121,8 +122,8 @@ set the background color via \verb|\codebg| variable: set it to any color you wi
         backgroundcolor=\color{\codebg},
 @
 
-The interesting part is the \tt escapeinside \rm variable, which is used to set the characters which will be
-used to escape inside the \tt lstlisting \rm environment. I have set these variables to \verb|@<| and
+The interesting part is the \texttt{escapeinside} variable, which is used to set the characters which will be
+used to escape inside the \texttt{lstlisting} environment. I have set these variables to \verb|@<| and
 \verb|@>|. To print these variables inside the environment, they need to be escaped themselves. Example:
 
 <<>>=
@@ -137,8 +138,8 @@ used to escape inside the \tt lstlisting \rm environment. I have set these varia
 
 @
 
-We can define \tt oldcode \rm and \tt vcode \rm environments in a similar fashion with a few minor changes: in
-\tt oldcode \rm we will get rid of caption and label, and in \tt vcode \rm we will get rid of escape
+We can define \texttt{oldcode} and \texttt{vcode} environments in a similar fashion with a few minor changes:
+in \texttt{oldcode} we will get rid of caption and label, and in \texttt{vcode} we will get rid of escape
 characters.
 
 <<oldcode environment>>=
@@ -171,8 +172,8 @@ characters.
 }{}
 @
 
-We end this \tt .sty \rm file by defining the format in which we want to display captions in references and in
-listings. I have followed the style which had been used by Knuth and Ramsey:
+We end this \texttt{.sty} file by defining the format in which we want to display captions in references and
+in listings. I have followed the style which had been used by Knuth and Ramsey:
 
 \begin{itemize}
     \item $\langle$ name of the chunk $\rangle \equiv$: Used when defining a chunk for the first time
@@ -181,10 +182,10 @@ listings. I have followed the style which had been used by Knuth and Ramsey:
     \item $\langle$ name of the chunk $\rangle$: Used when referencing a chunk
 \end{itemize}
 
-The first and third type of formatting is defined in \tt litcode.sty \rm itself. One can cook up a \LaTeX code
-which checks whether a chunk has been previously defined or not and accordingly format its captioning. I am
-not that clever. This decision (checking the \it freshness \rm of the chunk and formatting its caption) is
-done by \tt lweave \rm. 
+The first and third type of formatting is defined in \texttt{litcode.sty} itself. One can cook up a \LaTeX
+code which checks whether a chunk has been previously defined or not and accordingly format its captioning. I
+am not that clever. This decision (checking the \textit{freshness} of the chunk and formatting its caption) is
+done by \textit{lweave}. 
 
 <<Caption and Chunk Listing format>>=
 \DeclareCaptionFormat{codecaptionformat}
@@ -207,7 +208,7 @@ done by \tt lweave \rm.
 @
 
 Note how in \verb|\DeclareCaptionFormat| I have set the caption under \verb|\phantom| command so that they are
-invisble and do not mess up the indentation. In \verb|\captionsetup| I have setup \tt skip \rm to
+invisble and do not mess up the indentation. In \verb|\captionsetup| I have setup \texttt{skip} to
 \verb|-\baselineskip| so that the vertical space between a chunk and lines of normal text preceding it is not
 huge. Also look at the use of \verb|\detokenize|: it is being used to make sure that special chars do not mess
 up the formatting of captions and references.

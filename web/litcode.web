@@ -41,7 +41,14 @@
 \author{Praneet Kapoor}
 \maketitle
 
-\input{content.tex}
+\input{introduction.tex}
+
+\section{Source Code}
+%\input{linit.tex}
+\input{ltangle.tex}
+\input{lweave.tex}
+\input{styling_file.tex}
+\input{plsty.tex}
 
 \newpage
 \phantomsection
