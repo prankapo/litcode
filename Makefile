@@ -25,8 +25,6 @@ all:
 	@echo "Building the documentation..."
 	-$(MAKE) buildtex
 	@echo "Done.\n"
-	@echo "Running the examples for your satisfaction..."
-	$(MAKE) runex
 	@echo "Done.\n"
 
 # This part is for generating the 'raw' source files
@@ -55,13 +53,6 @@ src: $(wildcard web/*.web) web/source_code.web
 	python3 $(BOOT)/ltangle.py -i $(WEB)/src.json -R ltangle.py > litcode/ltangle.py
 	python3 $(BOOT)/ltangle.py -i $(WEB)/src.json -R lweave.py > litcode/lweave.py
 
-examples: $(wildcard web/*.web) web/source_code.web
-	mkdir -p examples
-	python3 $(BOOT)/ldump.py web/examples.web > web/examples.json
-	python3 $(BOOT)/ltangle.py -i web/examples.json -R fibonacci.c -cc '//' > examples/fibonacci.c
-	python3 $(BOOT)/ltangle.py -i web/examples.json -R primes.c -cc '//' > examples/primes.c
-	python3 $(BOOT)/ltangle.py -i web/examples.json -R Makefile -cc '#' -ut 4 > examples/Makefile
-
 install: $(wildcard litcode/*.py)
 	python3 -m pip install .
 
@@ -72,7 +63,7 @@ documentation: $(wildcard web/*.web) web/source_code.web
 	mkdir -p documentation
 	linit $(DOC)
 	lweave web/litcode.web > documentation/litcode.tex
-	lweave web/introduction.web web/source_code.web web/examples.web > $(DOC)/content.tex 
+	lweave web/introduction.web web/source_code.web > $(DOC)/content.tex 
 	cp web/references.web $(DOC)/references.bib
 
 # buildtex: compile the PDF
@@ -83,8 +74,7 @@ buildtex: $(DOC)/litcode.tex $(DOC)/references.bib
 	-cd documentation && \
 	biber litcode && \
 	pdflatex litcode.tex && \
-	pdflatex litcode.tex && \
-	pdf2htmlEX litcode.pdf --zoom 2
+	pdflatex litcode.tex
 	@echo "Done.\n"
 
 # buildtex: compile the PDF
@@ -95,19 +85,14 @@ buildtex-fast: $(DOC)/litcode.tex $(DOC)/references.bib
 	-cd documentation && \
 	biber litcode && \
 	pdflatex -interaction=batchmode litcode.tex && \
-	pdflatex -interaction=batchmode litcode.tex && \
-	pdf2htmlEX litcode.pdf --zoom 2 --process-outline 
+	pdflatex -interaction=batchmode litcode.tex
 	@echo "Done.\n"
-	
-# runex: Run the examples
-runex: $(wildcard examples/*.c) examples/Makefile
-	(cd examples;make runfib; make runprimes)
 
 # clean: cleans everything except for web files
 clean:
 	-rm web/*.json 
 	-rm web/source_code.web
-	-rm -rf litcode setup.py examples documentation
+	-rm -rf litcode setup.py documentation
 	-rm -rf litcode.egg-info
 	-rm -rf build
 
