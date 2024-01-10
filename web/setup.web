@@ -36,8 +36,18 @@ be installed. Let me define the name of the package and version number:
 
 setup(
 	name = 'litcode',
-	version = '0.2.202',
+@
 
+For the version number, I can read \texttt{version.txt} and get the version number from there. This would make
+\texttt{version.txt} a \texttt{package data} file.
+
+<<setup.py>>=
+	package_data = {
+		'version': ['version.txt']
+	},
+	version = '''
+	<<version>>
+	''',
 @
 
 Using \verb|find_packages()|, we pass a list of packages used in this project:

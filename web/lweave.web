@@ -4,7 +4,6 @@ Now we have to write the final program of the LitCode system, \tt lweave.py\rm. 
 shebang and the necessary imports.
 
 <<lweave.py>>=
-#!/usr/bin/python3
 import os
 import sys
 import re
@@ -17,6 +16,12 @@ valid \LaTeX{} code. This transpilation will be done by a function named \tt tra
 
 <<lweave.py>>=
 
+def version():
+    version = '''
+    <<version>>
+    '''
+    print('This is lweave, Version ' + version.strip('\n'))
+
 def transpiler(lines):
     <<transpile from web to latex>>
 
@@ -28,6 +33,9 @@ def main():
 First let us get <<lweave: main>> out of the way. If no files are provided to it, \tt lweave \rm should fail.
 
 <<lweave: main>>=
+if '-v' in sys.argv or '--version' in sys.argv:
+    version()
+    exit(0)
 if len(sys.argv) < 2:
     print('File names have to be provided as command line arguments')
     exit(1)
@@ -129,11 +137,11 @@ if chunkname:
         mode = 'code'
         processed_chunkList.append(chunkname)
         envbegin = '\\begin{code}[' + chunkname + ']\n'
-        caption = '@<$\\langle$\\textit{\detokenize{' + chunkname + '}}$\\rangle\\equiv$@>\n'
+        caption = '@<$\\langle$\\textrm{\\textit{\detokenize{' + chunkname + '}}}$\\rangle\\equiv$@>\n'
     else:
         mode = 'oldcode'
         envbegin = '\\begin{oldcode}\n'
-        caption = '@<$\\langle$\\textit{\detokenize{' + chunkname + '}}$\\rangle ' + \
+        caption = '@<$\\langle$\\textrm{\\textit{\detokenize{' + chunkname + '}}}$\\rangle ' + \
                     '\\thinspace +\\!\\!\\equiv$@>\n'
     transpiled_lines.append(envbegin)
     transpiled_lines.append(caption)
@@ -196,6 +204,16 @@ if reference:
         line = line.replace('>>', '}@>')
 
 @
+
+
+\textbf{NOTE}: The conditional statement \texttt{if reference in chunkList:} ensures that the transpilation
+
+$$\langle\langle \texttt{reference} \rangle\rangle \to \verb|\coderef{reference}|$$ 
+
+is done only if \texttt{reference} is in the \texttt{reference\_list}. This prevents any breaks during the
+building phase of \LaTeX. As a consequence, of this, if you are having a chunk in another web file and do not
+pass it to \texttt{lweave}, then the transpilation won't happen. Therefore, either have all the relevant
+chunks defined in the same web file, or pass all the web files to \texttt{lweave}.\\
 
 We also need to make sure that if we are encountering \verb|@| we need to switch modes immediately.
 

@@ -22,7 +22,6 @@ We begin with the shebang line specifying the path of the python3 and import \tt
 json \rm and \tt re \rm modules.
 
 <<ldump.py>>=
-#!/usr/bin/python3
 import os
 import sys
 import re

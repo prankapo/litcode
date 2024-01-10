@@ -2,7 +2,7 @@
 
 \texttt{plsty.py} or simply \texttt{plsty}, will be responsible for writing \texttt{litcode.sty} to a
 directory which is a passed to it as a command line argument. Of course, I can upload this styling file CTAN,
-but I do not think that this is anything ground-breaking, so I will keep it with myself.\\
+but I do not think that this is anything ground-breaking, so I will keep it with myself.
 
 <<plsty.py>>=
 #!/usr/bin/python3

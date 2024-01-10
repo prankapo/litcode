@@ -91,6 +91,7 @@ chunk listing style. I will begin with the queen --- the \texttt{code} environme
 <<code environment>>=
 % Define code environment: Used when defining a chunk for the first time
 \lstnewenvironment{code}[1][]{
+    \vspace{-1em}
     \lstset{
 @
 
@@ -145,6 +146,7 @@ characters.
 <<oldcode environment>>=
 % Define oldcode environment: To be used when extending an already defined chunk
 \lstnewenvironment{oldcode}[1][]{
+    \vspace{-0.5em}
     \lstset{
         columns=fullflexible,
         basicstyle=\litcodefont,
@@ -161,6 +163,7 @@ characters.
 % Verbatim code environment: Takes no captions, has no labels and won't get included in the listing. 
 % Purely verbatim!!
 \lstnewenvironment{vcode}[1][]{
+    \vspace{-0.5em}
     \lstset{
         columns=fullflexible,
         basicstyle=\litcodefont,
@@ -176,10 +179,10 @@ We end this \texttt{.sty} file by defining the format in which we want to displa
 in listings. I have followed the style which had been used by Knuth and Ramsey:
 
 \begin{itemize}
-    \item $\langle$ name of the chunk $\rangle \equiv$: Used when defining a chunk for the first time
-    \item $\langle$ name of the chunk $\rangle \thinspace +\!\!\equiv$: Used when extending the definition of
-    a chunk
-    \item $\langle$ name of the chunk $\rangle$: Used when referencing a chunk
+    \item $\langle$ \textit{name of the chunk} $\rangle \equiv$: Used when defining a chunk for the first time
+    \item $\langle$ \textit{name of the chunk} $\rangle \thinspace +\!\!\equiv$: Used when extending the
+    definition of a chunk 
+    \item $\langle$ \textit{name of the chunk} $\rangle$: Used when referencing a chunk
 \end{itemize}
 
 The first and third type of formatting is defined in \texttt{litcode.sty} itself. One can cook up a \LaTeX
@@ -197,14 +200,15 @@ done by \textit{lweave}.
     format=codecaptionformat,
     justification=raggedright,
     singlelinecheck=off,
-    skip=-\baselineskip
+    aboveskip=-2em,
+    belowskip=1em
 }
 
 \makeatletter
 \renewcommand\l@lstlisting[2]{\@dottedtocline{1}{0em}{2.3em}{\textit{#1}}{#2}}
 \makeatother
 
-\newcommand{\coderef}[1]{$\langle$\textit{\nameref{\detokenize{#1}}}$\rangle$}
+\newcommand{\coderef}[1]{$\langle$\textrm{\textit{\nameref{\detokenize{#1}}}}$\,\rangle$}
 @
 
 Note how in \verb|\DeclareCaptionFormat| I have set the caption under \verb|\phantom| command so that they are

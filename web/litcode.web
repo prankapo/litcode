@@ -30,25 +30,36 @@
 % For printing out the directory structure
 \usepackage{forest}
 
+% For including date and time in the footer.
+\usepackage[us,12hr]{datetime}
+
+\newcommand\blfootnote[1]{%
+        \begingroup
+        \renewcommand\thefootnote{}\footnote{#1}%
+        \addtocounter{footnote}{-1}%
+        \endgroup
+}
+
+% Set font for listing source code
+\def\litcodefont{\ttfamily}
+
+% Set background colors of code and vcode environments
 \def\codebg{white}
 \def\vcodebg{white}
 
 % Prevents LaTeX from indenting the first line of every paragraph
 \setlength\parindent{0pt}
 
+
 \begin{document}
 \title{LitCode}
 \author{Praneet Kapoor}
 \maketitle
 
-\input{introduction.tex}
 
-\section{Source Code}
-%\input{linit.tex}
-\input{ltangle.tex}
-\input{lweave.tex}
-\input{styling_file.tex}
-\input{plsty.tex}
+\blfootnote{\null\hfill\texttt{\input{version.txt} Compiled on \input{date.txt}}}
+\input{introduction.tex}
+\input{source_code.tex}
 
 \newpage
 \phantomsection

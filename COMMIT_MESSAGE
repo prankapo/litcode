@@ -1,7 +1,11 @@
-LitCode 0.2.202 - Changes in TeX primitives, Introduction of plsty.py
+LitCode 0.2.203 - Version numbering automation and cosmetic changes
 
-* Basic TeX primitive like \\tt and \\it have been replaced with \\texttt{} and \\textit{}
-* linit.py renamed to plsty.py. Source code is in plsty.web. This would be responsible for printing
-  litcode.sty
-* documentation/litcode.pdf is not getting deleted upon cleaning up the directory. This will allow people to
-  read the source code without installing the package.
+* Source files are now included in source_code.tex and not litcode.web.
+* Date and time of compilation of code is now included in the footer of the first page. 
+* Version number is now kept in a separate file: version.txt. This version number can be printed by executing
+  the program with --version or -v flag.
+* Thin space added in the definition of coderef. This makes sure that the last letter of a reference is not
+  touching the right angle >
+* shebangs have been removed as they serve no purpose now.
+* All files related to the source code are taken as input to source_code.tex. styling_file.web and plsty.web
+  are weaved together to allow proper referencing.

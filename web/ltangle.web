@@ -21,12 +21,16 @@ switches.
 Like before, we begin our code with a shebang. We import the same modules as before. 
 
 <<ltangle.py>>=
-#!/usr/bin/python3
 import os
 import sys
 import re
 import json
 
+def version():
+    version = '''
+    <<version>>
+    '''
+    print('This is lweave, Version ' + version.strip('\n'))
 @
 
 I am setting \tt chunkDict \rm as a global variable. This eliminates the need to pass it as an argument during
@@ -57,7 +61,7 @@ def main():
 
 So, this would be the core structure of \tt ltangle\rm. Let's start writing <<ltangle: expandref>> as that is
 the most important part of this program. The expanded reference will be kept in \tt codeLines \rm which will
-be returned to \tt main \rm for further processing.\\
+be returned to \tt main \rm for further processing.
 
 <<ltangle: expandref>>=
 global chunkDict
@@ -107,6 +111,7 @@ for line in chunkDict[reference]:
 
 Now, I extract the whitespace using which we had expanded the reference and append it to each and every line
 in the \tt buffer\rm.
+
 <<Expand the reference>>=
         indentation = line[:len(line) - len(line.lstrip())]
         for l in buffer:
@@ -116,6 +121,7 @@ in the \tt buffer\rm.
 
 Under the event no reference has been encountered, I simply append the line to \tt codeLines\rm and carry on
 with the next iteration.
+
 <<Expand the reference>>=
     else:
         codeLines.append(line)
@@ -131,6 +137,9 @@ reference = str()
 commentchar = None
 usetabs = False
 whitespace_conv_num = 4
+if '-v' in sys.argv or '--version' in sys.argv:
+    version()
+    exit(0)
 if '-i' in sys.argv:
     i = sys.argv.index('-i')
     dumpfile = sys.argv[i + 1]
