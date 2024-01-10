@@ -1,0 +1,103 @@
+\documentclass{article}
+
+\usepackage{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[OT1]{fontenc}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{textcomp}
+
+\usepackage{calc}
+\usepackage{caption}
+
+\usepackage{litcode}
+\usepackage{verbatim}
+
+\begin{document}
+\title{Fibonacci Sequence}
+\author{Praneet Kapoor}
+\maketitle
+
+The C code presented in this section is responsible for printing the Fibonacci sequence.\\
+
+I begin by writing the \tt Makefile \rm for building the program.
+<<Makefile>>=
+CC := gcc -std=C99 -O0
+
+runfib: fibonacci.exe
+    ./fibonacci.exe 30
+
+fibonacci.exe: fibonacci.o
+    $(CC) fibonacci.o -o fibonacci.exe
+
+fibonacci.o: fibonacci.c
+    $(CC) -c fibonacci.c -o fibonacci.o
+@
+
+Now comes the fun part. Our code will have two parts: <<Initialize variables>> will be responsible for
+initializing the variables which will then be used by <<Generate Fibonacci sequence till n terms>> to generate
+the sequence till some $n$ number of terms. $n$ will be provided by the user as a command line argument.
+
+<<fibonacci.c>>=
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(int argc, char **argv)
+{
+    <<Initialize variables>>
+    <<Generate Fibonacci sequence till n terms>>
+    fprintf(stdout, "Done\n");
+    return 0;
+}
+@
+
+To generate Fibonacci sequence, we need three numbers: $a$, $b$, and $n$. $a$ and $b$ will be used to generate
+the terms of the sequence till $n$ terms. $n$ will be a command line argument. We will need to check whether
+$n$ has been passed or not.
+
+<<Initialize variables>>=
+int a, b, n;
+a = -1;
+b = 1;
+<<Check cmd args and Initialize n>>
+@
+
+<<Check cmd args and Initialize n>>=
+if (argc < 2) {
+    fprintf(stderr, "Please provide `n' as a command line argument\n");
+    exit(1);
+}
+else {
+    n = atoi(argv[1]);
+}
+@
+
+We also need to make sure that $n$ is not less than zero. So, we will extend the definition of <<Check cmd
+args and Initialize n>>.
+
+<<Check cmd args and Initialize n>>=
+if (n < 0) {
+    fprintf(stderr, "n >= 0\n");
+    exit(1);
+}
+@
+
+Finally, we write the \textit{generating} portion of our code: <<Generate Fibonacci sequence till n terms>>.
+
+<<Generate Fibonacci sequence till n terms>>=
+for (int i = 0; i < n; ++i) {
+    fprintf(stdout, "%d ", a + b);
+    b = b + a;
+    a = b - a;
+}
+@
+
+\newpage
+\phantomsection
+\addcontentsline{toc}{section}{Listings}
+\lstlistoflistings
+
+\end{document}

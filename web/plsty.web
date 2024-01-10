@@ -1,0 +1,63 @@
+\subsection{plsty.py}
+
+\texttt{plsty.py} or simply \texttt{plsty}, will be responsible for writing \texttt{litcode.sty} to a
+directory which is a passed to it as a command line argument. Of course, I can upload this styling file CTAN,
+but I do not think that this is anything ground-breaking, so I will keep it with myself.
+
+<<plsty.py>>=
+#!/usr/bin/python3
+import os
+import sys
+import time
+import subprocess as sbpr
+
+@
+
+The entire content of \tt litcode.sty \rm will be present inside \tt plsty.py \rm as a multi-line raw string.
+Why a raw string? This is because this \tt .sty \rm file makes extensive use of backslash \verb|\|. I do not
+want to make things messy by escaping every backslash... Better to just use a raw string. :-)
+
+<<plsty.py>>=
+litcode_sty_content = r'''
+<<litcode.sty>>
+'''
+
+@
+
+And that is something I might not have been able to do without using literate programming: reuse the code for
+a file as a chunk inside another source file.
+
+\texttt{plsty.py} will accept only a single command line argument which would be the name of the directory
+where \texttt{litcode.sty} is to be saved. The `entry-point' for our script will be the \texttt{main}
+function, where the command line arguments will be processed to get this directory name. If none is supplied,
+then the program should exit with an error code.
+
+<<plsty.py>>=
+def main():
+    global litcode_sty_content
+    if len(sys.argv) <= 1:
+        print('Please supply a directory name')
+        exit(1)
+    directory = sys.argv[1]
+@
+
+We can also ensure that the directory is made using \texttt{mkdir -p}. It won't do any harm to the directory's
+contents if it already exists.
+
+<<plsty.py>>=
+    command = f'mkdir -p {directory}'
+    os.system(command)
+@
+
+Finally, we write the raw string to \texttt{litcode.sty} placed under the directory supplied as a command line
+argument. We need the full path to \texttt{litcode.sty} which can easily be made by appending the name of the
+directory (relative to the current directory/position in the terminal), system path separator (which we get by
+\texttt{os.sep()}) and the string \verb|'litcode.sty'|. I have just used a formatted string, although these
+strings could also have been appended by \texttt{+} operator.
+
+<<plsty.py>>=
+    full_path_to_sty = f'{directory}{os.sep}litcode.sty'
+    with open(full_path_to_sty, 'w') as fp:
+        fp.writelines(litcode_sty_content)
+
+@

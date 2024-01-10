@@ -1,0 +1,235 @@
+\subsection{lweave.py}
+
+Now we have to write the final program of the LitCode system, \tt lweave.py\rm. Like before, we begin with a
+shebang and the necessary imports.
+
+<<lweave.py>>=
+import os
+import sys
+import re
+
+@
+
+Again, \tt main \rm will be our entry point in this program. \tt lweave \rm should read all the files that
+have been passed to it as command-line arguments, club together the lines making them, and transpile them to
+valid \LaTeX{} code. This transpilation will be done by a function named \tt transpiler \rm.
+
+<<lweave.py>>=
+
+def version():
+    version = '''
+    <<version>>
+    '''
+    print('This is lweave, Version ' + version.strip('\n'))
+
+def transpiler(lines):
+    <<transpile from web to latex>>
+
+def main():
+    <<lweave: main>>
+
+@
+
+First let us get <<lweave: main>> out of the way. If no files are provided to it, \tt lweave \rm should fail.
+
+<<lweave: main>>=
+if '-v' in sys.argv or '--version' in sys.argv:
+    version()
+    exit(0)
+if len(sys.argv) < 2:
+    print('File names have to be provided as command line arguments')
+    exit(1)
+
+@
+
+If files have been provided to it, lines of each file will be read and stored in a common list, which will
+then be sent to \tt transpiler \rm. The transpiler will return another list, containing the transpiled lines.
+
+<<lweave: main>>=
+files = sys.argv[1:]
+lines = []
+transpiled_lines = []
+for file in files:
+    with open(file, 'r') as fp:
+        lines += fp.readlines()
+transpiled_lines += transpiler(lines)
+
+@
+
+These lines will then be joined to form a single string and will be printed on the screen.
+
+<<lweave: main>>=
+print(''.join(transpiled_lines))
+
+@
+
+The transpiler needs to check whether it is reading a normal code line or a line in some listing, i.e., from
+\tt code\rm, \tt oldcode\rm, or \tt vcode \rm environment and take actions accordingly. The transpilations it
+need to perform in each of the environments are as follows:
+
+\begin{enumerate}
+    \item \textbf{Normal mode}
+    \begin{itemize}
+        \item[] Text within \verb|<<| and \verb|>>| to be extracted. Check if such a reference exists. If it
+        exists, format to \verb|\coderef|, else continue without alteration
+        \item[] \verb|@<| and \verb|@>| should remain unaltered 
+    \end{itemize}
+    \item \textbf{Listing mode}
+    \begin{itemize}
+        \item[] Text within \verb|<<| and \verb|>>=| to be extracted. If \verb|len(text)| is zero, then
+        replace by \verb|\begin{vcode}|. If not, then check if the reference has already been defined or not.
+        If it is a new one, perform substitution with \verb|\begin{code}| and \verb|<<extracted text>>=|. Else
+        with \verb|\begin{oldcode}| and \verb|<<extracted text>> +=|
+        \item[] Text within \verb|<<| and \verb|>>| to be extracted. Substitution to be done with
+        \verb|@<\coderef{}@>|.
+        \item[] \verb|@<| and \verb|@>| to be escaped properly.
+    \end{itemize}
+\end{enumerate}
+
+Given the transpilations, here are the variables which we will use to keep track of things for us.
+
+<<transpile from web to latex>>=
+mode = 'Normal'
+chunkList = []
+processed_chunkList = []
+transpiled_lines = []
+
+@
+
+We are going to go through all the lines and make a list of chunks present in the files.
+
+<<transpile from web to latex>>=
+for line in lines:
+    chunkname = re.findall(r'(?<=^<<).+?(?=>>=\s*$)', line.strip())
+    if chunkname:
+        chunkname = chunkname[0]
+        if len(chunkname) != 0:
+            chunkList.append(chunkname)
+
+@
+
+We are again going to iterate over the lines, but this time actually transpile them. 
+
+<<transpile from web to latex>>=
+for line in lines:
+    if mode == 'Normal':
+        <<transpiler: Normal mode>>
+    
+    elif mode == 'code' or mode == 'oldcode':
+        <<transpiler: code and oldcode mode>>
+    
+    elif mode == 'vcode':
+        <<transpiler: vcode mode>>
+    
+    transpiled_lines.append(line)
+return transpiled_lines
+
+@
+
+Now let us write `rules' of transpiling web to \LaTeX{} in normal mode. We will first check whether we have
+encountered a listing environment or not and if we have, we need to set the mode and add some lines accordingly,
+
+<<transpiler: Normal mode>>=
+chunkname = re.findall(r'(?<=^<<).+?(?=>>=\s*$)', line.strip())
+if chunkname:
+    chunkname = chunkname[0]
+    if chunkname not in processed_chunkList:
+        mode = 'code'
+        processed_chunkList.append(chunkname)
+        envbegin = '\\begin{code}[' + chunkname + ']\n'
+        caption = '@<$\\langle$\\textrm{\\textit{\detokenize{' + chunkname + '}}}$\\rangle\\equiv$@>\n'
+    else:
+        mode = 'oldcode'
+        envbegin = '\\begin{oldcode}\n'
+        caption = '@<$\\langle$\\textrm{\\textit{\detokenize{' + chunkname + '}}}$\\rangle ' + \
+                    '\\thinspace +\\!\\!\\equiv$@>\n'
+    transpiled_lines.append(envbegin)
+    transpiled_lines.append(caption)
+    continue
+
+@
+Note that I am detokenizing the name of the chunk so that special chars like \_, \& can be used without
+performing any special characted manipulations.\\
+
+\tt code \rm and \tt oldcode \rm will be set if there is some text within the angled brackets. But what if
+there is no text? In such case, \verb|<<>>=| will mark the beginning of \tt vcode \rm environment.
+
+<<transpiler: Normal mode>>=
+vcodeBegins = (line.strip() == '<<>>=')
+if vcodeBegins:
+    mode = 'vcode'
+    envbegin = '\\begin{vcode}\n'
+    transpiled_lines.append(envbegin)
+    continue
+
+@
+
+If none of these environments have started, then we are simply in \it Normal \rm mode. Then \verb|@<| and
+\verb|@>| should remain unaltered. However, if we are encountering a reference, and if it defined in the file
+in the line, it should be transpiled to \verb|\coderef| (as has been mentioned above).
+
+<<transpiler: Normal mode>>=
+reference = re.findall(r'(?<=<<).+?(?=>>.*)', line.strip())
+if reference:
+    reference = reference[0]
+    if reference in chunkList:
+        line = line.replace('<<', '\\coderef{')
+        line = line.replace('>>', '}')
+
+@
+
+If we are in either \textbf{code} or \textbf{oldcode} mode, we need to escape \verb|@<| and
+\verb|@>| so that they can be printed properly. Also, any references should be transpiled to \verb|\coderef|
+and be escaped by the escape characters.
+
+<<transpiler: code and oldcode mode>>=
+buffer = ''
+i = 0
+while i < len(line):
+    if line[i] == '@':
+        if i < len(line) - 1:
+            if line[i + 1] == '<' or line[i + 1] == '>':
+                buffer += '@<' + line[i] + line[i + 1] + '@>'
+                i += 2
+                continue
+    buffer += line[i]
+    i += 1
+line = buffer
+
+reference = re.findall(r'(?<=^<<).+?(?=>>\s*$)', line.strip())
+if reference:
+    reference = reference[0]
+    if reference in chunkList:
+        line = line.replace('<<', '@<\\coderef{')
+        line = line.replace('>>', '}@>')
+
+@
+
+
+\textbf{NOTE}: The conditional statement \texttt{if reference in chunkList:} ensures that the transpilation
+
+$$\langle\langle \texttt{reference} \rangle\rangle \to \verb|\coderef{reference}|$$ 
+
+is done only if \texttt{reference} is in the \texttt{reference\_list}. This prevents any breaks during the
+building phase of \LaTeX. As a consequence, of this, if you are having a chunk in another web file and do not
+pass it to \texttt{lweave}, then the transpilation won't happen. Therefore, either have all the relevant
+chunks defined in the same web file, or pass all the web files to \texttt{lweave}.\\
+
+We also need to make sure that if we are encountering \verb|@| we need to switch modes immediately.
+
+<<transpiler: code and oldcode mode>>=
+if line.strip() == '@':
+    line = '\\end{' + mode + '}\n'
+    mode = 'Normal'
+
+@
+
+The code for transpiling \texttt{vcode} is relatively simple. Everything has to be printed out verbatim. We
+just need to check whether we have encountered stop-char or not.
+
+<<transpiler: vcode mode>>=
+if line.strip() == '@':
+    mode = 'Normal'
+    line = '\\end{vcode}\n'
+
+@

@@ -1,0 +1,74 @@
+\documentclass[9pt]{extarticle}
+
+\usepackage[a4paper,
+            bindingoffset=0.2in,
+            left=1in,
+            right=1in,
+            top=1in,
+            bottom=1in,
+            footskip=.25in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[OT1]{fontenc}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{textcomp}
+
+\usepackage{calc}
+\usepackage{caption}
+
+\usepackage{litcode}
+\usepackage{verbatim}
+\usepackage{framed}
+
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+
+\usepackage[style=ieee,natbib=false,mcite=false,backend=biber]{biblatex}
+\addbibresource{references.bib}
+
+% For printing out the directory structure
+\usepackage{forest}
+
+% For including date and time in the footer.
+\usepackage[us,12hr]{datetime}
+
+\newcommand\blfootnote[1]{%
+        \begingroup
+        \renewcommand\thefootnote{}\footnote{#1}%
+        \addtocounter{footnote}{-1}%
+        \endgroup
+}
+
+% Set font for listing source code
+\def\litcodefont{\ttfamily}
+
+% Set background colors of code and vcode environments
+\def\codebg{white}
+\def\vcodebg{white}
+
+% Prevents LaTeX from indenting the first line of every paragraph
+\setlength\parindent{0pt}
+
+
+\begin{document}
+\title{LitCode}
+\author{Praneet Kapoor}
+\maketitle
+
+
+\blfootnote{\null\hfill\texttt{\input{version.txt} Compiled on \input{date.txt}}}
+\input{introduction.tex}
+\input{source_code.tex}
+
+\newpage
+\phantomsection
+\addcontentsline{toc}{section}{Listings}
+\lstlistoflistings
+
+\newpage
+\phantomsection
+\addcontentsline{toc}{section}{References}
+\printbibliography
+
+\end{document}
