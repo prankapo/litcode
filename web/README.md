@@ -471,7 +471,7 @@ make uninstall
 ```
 
 
-# Soure Code of LitCode
+# Source Code of LitCode
 ## Common chunks
 A few of the chunks are going to be used by all the programs that make up LitCode. Thanks to the power of
 Literate Programming, I can define these chunks once here and then use them everywhere else.  

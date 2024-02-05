@@ -1,6 +1,4 @@
-LitCode 0.5.1 - Fixing alpha of image and hook for GitHub Flavored Markdown
+LitCode 0.5.2 - Fixing alpha of image and hook for GitHub Flavored Markdown
 
-1. Alpha factor of the image `literate_workflow.png` has been fixed. Now its background is white. 
-2. GitHub was not able to render '\!' control sequence in TeX. So, I have written another hook `fix_4_gfm`
-   which gets rid of `\!\!\equiv` entirely. 
-3. Changes done to Makefile's `clean` rule. It won't delete `trd.json` anymore.
+1. Minor fix of a heading in README.md
+2. Makefile `clean` rule won't delete any hooks now. 

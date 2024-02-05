@@ -82,7 +82,7 @@ clean:
 	-rm -rf build/
 	-rm -rf examples/
 	-rm *.pdf
-	-rm format_ch_cr insert_module_number setup.py
+	-rm setup.py
 
 uninstall: 
 	@echo "Uninstalling LitCode..."
