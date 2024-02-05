@@ -64,7 +64,7 @@ hooks:
 
 documentation:
 	(cd figures; make literate_workflow; make clean)
-	lweave web/README.md -trd trd.json -hk format_ch_cr insert_module_number -o README.md
+	lweave web/README.md -trd trd.json -hk format_ch_cr insert_module_number fix_4_gfm -o README.md
 	doctoc README.md
 
 pdf:
@@ -81,7 +81,7 @@ clean:
 	-rm -rf litcode.egg-info/
 	-rm -rf build/
 	-rm -rf examples/
-	-rm *.pdf *.json
+	-rm *.pdf
 	-rm format_ch_cr insert_module_number setup.py
 
 uninstall: 
