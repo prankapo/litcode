@@ -13,22 +13,23 @@ using ever dangerous `exec()`.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [LitCode - Another Tool for Literate Programming](#litcode---another-tool-for-literate-programming)
 - [Introduction](#introduction)
-  - [What is Literate Programming?](#what-is-literate-programming)
-  - [How does one write a literate program?](#how-does-one-write-a-literate-program)
-  - [An Example of a Literate Program: Print first $n$ Prime Numbers](#an-example-of-a-literate-program-print-first-n-prime-numbers)
-    - [`generate_primes.c`](#generate_primesc)
-    - [Building and running the program](#building-and-running-the-program)
-  - [How is LitCode different from pre-existing literate programming tools?](#how-is-litcode-different-from-pre-existing-literate-programming-tools)
+	- [What is Literate Programming?](#what-is-literate-programming)
+	- [How does one write a literate program?](#how-does-one-write-a-literate-program)
+	- [An Example of a Literate Program: Print first $n$ Prime Numbers](#an-example-of-a-literate-program-print-first-n-prime-numbers)
+		- [`generate_primes.c`](#generate_primesc)
+		- [Building and running the program](#building-and-running-the-program)
+	- [How is LitCode different from pre-existing literate programming tools?](#how-is-litcode-different-from-pre-existing-literate-programming-tools)
 - [Installation](#installation)
 - [Source Code of LitCode](#source-code-of-litcode)
-  - [Common chunks](#common-chunks)
-  - [`linit.py`](#linitpy)
-  - [`ltangle.py`](#ltanglepy)
-  - [`lweave.py`](#lweavepy)
-    - [Examples of hooks](#examples-of-hooks)
-  - [`lhooks.py`](#lhookspy)
-  - [`__init__.py` and `setup.py`](#__init__py-and-setuppy)
+	- [Common chunks](#common-chunks)
+	- [`linit.py`](#linitpy)
+	- [`ltangle.py`](#ltanglepy)
+	- [`lweave.py`](#lweavepy)
+		- [Examples of hooks](#examples-of-hooks)
+	- [`lhooks.py`](#lhookspy)
+	- [`__init__.py` and `setup.py`](#__init__py-and-setuppy)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -527,7 +528,7 @@ of the scripts is executed. We can put this version number in one chunk and use 
 
 $\langle$*version*$\rangle\!\!\equiv$
 ```Python
-version = '0.5'
+version = '0.5.2'
 ```
 
 

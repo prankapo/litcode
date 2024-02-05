@@ -27,7 +27,6 @@ boot:
 	python3 bootstrap/linit.py -f trd.json
 	python3 bootstrap/ltangle.py web/README.md -trd trd.json -t 4 -c linit.py -o litcode-tmp/linit.py
 	python3 bootstrap/ltangle.py web/README.md -trd trd.json -t 4 -c ltangle.py -o litcode-tmp/ltangle.py
-	rm trd.json
 	@echo "Done."
 	@echo 'Modifying linit.py and ltangle.py...'
 	@echo 'main()' >> litcode-tmp/linit.py
