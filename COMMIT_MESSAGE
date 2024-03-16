@@ -1,8 +1,4 @@
-LitCode 0.5.3 - Fixing a stupid mistake in the example
+LitCode 0.5.3a - Fixed Markdown file to show updated code.
 
-The example that is being used to demonstrate the power of literate programming is that of a program for
-generating N prime numbers. And I made a stupid mistake: instead of testing for divisibility from 1 till N /
-2, divisibility was being tested from 1 till (N / 2) - 1, which led to 4 also being considered as prime
-number. This stupid mistake makes clear a very important thing: irrespective of the programming methodology
-you have adopeted, stupid mistakes can always creep in.  
-Embarrassed!
+Forgot to also execute the recipe `test-install` which didn't update the markdown which will get used
+eventually.

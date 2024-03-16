@@ -508,7 +508,7 @@ of the scripts is executed. We can put this version number in one chunk and use 
 
 <<version>>=
 ```Python
-version = '0.5.3'
+version = '0.5.3a'
 ```
 
 @@
