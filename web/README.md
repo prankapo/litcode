@@ -229,7 +229,7 @@ while (prime_count < n) {
   
 @ <<Check if N is prime or not>>=	
 ```C
-for (d = 2; d < (N / 2); ++d) {
+for (d = 2; d <= (N / 2); ++d) {
 	if (N % d == 0) {
 		is_prime = 1;
 		break;
@@ -508,7 +508,7 @@ of the scripts is executed. We can put this version number in one chunk and use 
 
 <<version>>=
 ```Python
-version = '0.5'
+version = '0.5.3'
 ```
 
 @@

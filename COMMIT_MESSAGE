@@ -1,5 +1,8 @@
-LitCode 0.5.2 - Fixing alpha of image and hook for GitHub Flavored Markdown
+LitCode 0.5.3 - Fixing a stupid mistake in the example
 
-1. Minor fix of a heading in README.md
-2. Makefile `clean` rule won't delete any hooks now. 
-3. Updated version number (of course!)
+The example that is being used to demonstrate the power of literate programming is that of a program for
+generating N prime numbers. And I made a stupid mistake: instead of testing for divisibility from 1 till N /
+2, divisibility was being tested from 1 till (N / 2) - 1, which led to 4 also being considered as prime
+number. This stupid mistake makes clear a very important thing: irrespective of the programming methodology
+you have adopeted, stupid mistakes can always creep in.  
+Embarrassed!
