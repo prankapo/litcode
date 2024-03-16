@@ -1,0 +1,16 @@
+
+count = 0
+buffer = []
+for line in woven_lines:
+	if line.startswith(trd['module-startswith']):
+		if line[1] != trd['module-startswith']:	
+			count += 1
+			print(count)
+			line = '**' + str(count) + '.**  ' + line[1:]
+		else:
+			print('Skipping and resetting!')
+			count = 0
+			line = line[2:]
+	buffer.append(line)
+woven_lines = buffer
+

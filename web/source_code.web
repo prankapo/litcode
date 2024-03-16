@@ -1,8 +1,0 @@
-\section{Source Code}
-\input{version.tex}
-\input{terminology.tex}
-%\input{linit.tex}
-\input{ldump.tex}
-\input{ltangle.tex}
-\input{lweave.tex}
-\input{styling_file_and_plsty.tex}

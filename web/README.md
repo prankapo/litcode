@@ -10,27 +10,8 @@ very simple console-scripts written in Python. The functionality of the scripts 
 playing a translation dictionary (nothing but a JSON file) and some `hooks` written in Python, and executed
 using ever dangerous `exec()`.
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-- [Introduction](#introduction)
-  - [What is Literate Programming?](#what-is-literate-programming)
-  - [How does one write a literate program?](#how-does-one-write-a-literate-program)
-  - [An Example of a Literate Program: Print first $n$ Prime Numbers](#an-example-of-a-literate-program-print-first-n-prime-numbers)
-    - [`generate_primes.c`](#generate_primesc)
-    - [Building and running the program](#building-and-running-the-program)
-  - [How is LitCode different from pre-existing literate programming tools?](#how-is-litcode-different-from-pre-existing-literate-programming-tools)
-- [Installation](#installation)
-- [Source Code of LitCode](#source-code-of-litcode)
-  - [Common chunks](#common-chunks)
-  - [`linit.py`](#linitpy)
-  - [`ltangle.py`](#ltanglepy)
-  - [`lweave.py`](#lweavepy)
-    - [Examples of hooks](#examples-of-hooks)
-  - [`lhooks.py`](#lhookspy)
-  - [`__init__.py` and `setup.py`](#__init__py-and-setuppy)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<!-- START doctoc -->
+<!-- END doctoc -->
 
 # Introduction
 Traditional programming involves writing a code in some language $L$, in some file $F$ to solve a particular
@@ -210,7 +191,7 @@ program. I will be rewriting the program for printing first $n$ prime numbers in
 allow the reader to contrast this approach with the time-tested traditional approach of writing a program.  
 
 ### `generate_primes.c`
-**1.**   A number is said to be prime if it has no divisors other than 1 and itself. A simple way of checking whether
+@ A number is said to be prime if it has no divisors other than 1 and itself. A simple way of checking whether
 a given number $N$ is prime or not is to see if it has more than one divisors in the set $\{1, 2, \ldots , N -
 1\}$. If it has, then it is not a prime, else it is one. With a little more thought we can see that our list
 does not need to go till $N - 1$; we just need to check for the divisors till $\lfloor\frac{N}{2}\rfloor$. In
@@ -220,24 +201,24 @@ how we will check whether a number is prime or not: let $d$ be iteratively set t
 number in this set, then $N$ is not a prime number. Else, if we exhaust this set and fail to find a divisor
 for $N$, then $N$ is a prime number.  
 
-**2.**   We need to also print the prime number and keep a tab of how many prime numbers we have encountered so far.
+@ We need to also print the prime number and keep a tab of how many prime numbers we have encountered so far.
 This can be done by resetting a flag every time we go into our `check for divisors` loop. This flag is set to
 1, if the number is **not** a prime, and then we break from the loop. Outside the loop, if this flag is 0,
 then we can print out the number and iterate a counter (keeping tabs of the number of primes we have
 encountered). If the counter is less than $n$, we can increment $N$ by 1. Else, we break from the computation
 and end the program.  
 
-**3.**   We have now have a well developed vague picture of how our program should work. So, let's write down the
+@ We have now have a well developed vague picture of how our program should work. So, let's write down the
 core of our program.  
 
-$\langle$*Generate n prime numbers*$\rangle$
+<<Generate n prime numbers>>=
 ```C
 int N, d, is_prime, prime_count;
 prime_count = 0;
 N = 2;
 while (prime_count < n) {
 	is_prime = 0;
-	"<<Check if N is prime or not>>"
+	<<Check if N is prime or not>>
 	if (is_prime == 0) {
 		++prime_count;
 		fprintf(stdout, "%4d.\t%8d\n", prime_count, N);
@@ -246,7 +227,7 @@ while (prime_count < n) {
 }
 ```
   
-**4.**   $\langle$*Check if N is prime or not*$\rangle$	
+@ <<Check if N is prime or not>>=	
 ```C
 for (d = 2; d <= (N / 2); ++d) {
 	if (N % d == 0) {
@@ -256,42 +237,42 @@ for (d = 2; d <= (N / 2); ++d) {
 }
 ```
 
-**5.**   Having figured out the solution to our problem, we can now define the layout of chunks in our program:  
+@ Having figured out the solution to our problem, we can now define the layout of chunks in our program:  
 
-$\langle$*generate_primes.c*$\rangle$
+<<generate_primes.c>>=
 ```C
-"<<Include libraries>>"
+<<Include libraries>>
 
 int main(int argc, char ** argv) {
-	"<<Read n from command-line>>"
-	"<<Generate n prime numbers>>"
+	<<Read n from command-line>>
+	<<Generate n prime numbers>>
 	return 0;
 }
 ```
 
-**6.**   When it comes to the libraries, we of course need `stdio.h`. If we need another one, we can simply add it
+@ When it comes to the libraries, we of course need `stdio.h`. If we need another one, we can simply add it
 to the chunk.  
 
-$\langle$*Include libraries*$\rangle$
+<<Include libraries>>=
 ```C
 #include <stdio.h>
 ```
 
-**7.**   Our program will take a single command line argument, $n$. Now, this argument would be a character string.
+@ Our program will take a single command line argument, $n$. Now, this argument would be a character string.
 For our purposes, we can use often frowned upon `atoi()` function defined in `stdlib.h` and proceed from
-there. First we include `stdlib.h` in $\langle$*Include libraries*$\rangle$.  
+there. First we include `stdlib.h` in <<Include libraries>>.  
 
-$\langle$*Include libraries*$\rangle+$
+<<Include libraries>>=
 ```C
 #include <stdlib.h>
 ```
 
-**8.**   Now we can write down $\langle$*Read n from command-line*$\rangle$, which will be responsible for reading $n$ from the
+@ Now we can write down <<Read n from command-line>>, which will be responsible for reading $n$ from the
 command-line. We need to make sure that we throw some error in case no input has been provided. This can be
 done by checking the value of argc: if its less than 2, then only the name of the program was entered in the
 command-line and nothing else, in which case we simply exit after printing an error message:	 
 
-$\langle$*Read n from command-line*$\rangle$
+<<Read n from command-line>>=
 ```C
 int n;
 if (argc < 2) {
@@ -301,76 +282,76 @@ if (argc < 2) {
 n = atoi(argv[1]);
 ```
 
-
+@@
 
 ### Building and running the program
-**1.**   To build and run `generate_primes.c`, we can use a Makefile. Let's call it *make_example.mk*. It will have the
+@ To build and run `generate_primes.c`, we can use a Makefile. Let's call it *make_example.mk*. It will have the
 following structure:  
 
-$\langle$*make_example.mk*$\rangle$
+<<make_example.mk>>=
 ```Makefile
-"<<Define compiler and C flags>>"
-"<<Test run>>"
-"<<Build rule>>"
-"<<Remove generate_primes.exe>>"
+<<Define compiler and C flags>>
+<<Test run>>
+<<Build rule>>
+<<Remove generate_primes.exe>>
 ```
 
-**2.**   I will be using `-std=c99` and not `-ansi -pedantic` for the latter uses K&R C style strictly and won't
+@ I will be using `-std=c99` and not `-ansi -pedantic` for the latter uses K&R C style strictly and won't
 allow me to define variables freely anywhere in a function. Also, I will optimize it using -O2 flag, because
 hey! user can go wild and ask it to print a million prime numbers.  
 
-$\langle$*Define compiler and C flags*$\rangle$
+<<Define compiler and C flags>>=
 ```Makefile
 CC: gcc -std=c99 -O2
 ```
 
-**3.**   To build this program, we can simply pass it to the compiler and use -o flag to get an executable.  
+@ To build this program, we can simply pass it to the compiler and use -o flag to get an executable.  
 
-$\langle$*Build rule*$\rangle$
+<<Build rule>>=
 ```Makefile
 generate_primes.exe: generate_primes.c
 	$(CC) generate_primes.c -o generate_primes.exe
 ```
 
-**4.**   And to test it, we can define another rule, $\langle$*Test run*$\rangle$.		
+@ And to test it, we can define another rule, <<Test run>>.		
 
-$\langle$*Test run*$\rangle$
+<<Test run>>=
 ```Makefile
 test: generate_primes.exe
 	./generate_primes.exe 10
 ```
 
-**5.**   Note that as I am using a Linux environment for developing this code, I am running the program by appending
+@ Note that as I am using a Linux environment for developing this code, I am running the program by appending
 `./` in front of it. If you are using Windows command prompt (assuming you have gcc installed), then you can
 use the target for `test_win` for testing on Windows.  
 
-$\langle$*Test run*$\rangle+$
+<<Test run>>=
 ```Makefile
 test_win: generate_primes.exe
 	generate_primes.exe 10
 ```
 
-**6.**   Finally, after all this, it is a good habit to clean the directory. `clean` will help you do that:  
+@ Finally, after all this, it is a good habit to clean the directory. `clean` will help you do that:  
 
-$\langle$*Remove generate_primes.exe*$\rangle$
+<<Remove generate_primes.exe>>=
 ```Makefile
 clean: generate_primes.exe
 	rm generate_primes.exe
 ```
 
-**7.**   Again, let me define `clean_win` so that people using Windows are also not left untidy!  
+@ Again, let me define `clean_win` so that people using Windows are also not left untidy!  
 
-$\langle$*Remove generate_primes.exe*$\rangle+$
+<<Remove generate_primes.exe>>=
 ```Makefile
 clean_win: generate_primes.exe
 	del generate_primes.exe
 ```
 
- I feel that the literate representation of the prime generating program is less *hostile* to a beginner
+@@ I feel that the literate representation of the prime generating program is less *hostile* to a beginner
 than the traditional approach. As can be seen, each chunk of the program was in its module, and each module
-has got a number. I tackled the problem by writing the program from its core ($\langle$*Generate n prime numbers*$\rangle$)
-and later on added the lines ($\langle$*Read n from command-line*$\rangle$) which would allow the user to interact with this
-core. I even ended up extending a chunk ($\langle$*Include libraries*$\rangle$) while I gave my reason for extending it.  
+has got a number. I tackled the problem by writing the program from its core (<<Generate n prime numbers>>)
+and later on added the lines (<<Read n from command-line>>) which would allow the user to interact with this
+core. I even ended up extending a chunk (<<Include libraries>>) while I gave my reason for extending it.  
 
 I do not know whether this convinces the reader of the beauty of literate programming, but I hope that it
 does. For if programming was taught this way, I think that several of my friends won't be scared of
@@ -410,13 +391,13 @@ dictionary is a JSON file containing the following keys:
 * `module-startswith`: Character(s) which marks the beginning of a module. Default value: `@`  
 
 * `chunk-header-regex`: Regex pattern, which if satisfied by a line, marks the beginning of a chunk. Used by
-  both `ltangle` and `lweave`. Default value: `(^$\langle$*)(.+)(*$\rangle$=\\s*$)`  
+  both `ltangle` and `lweave`. Default value: `(^<<)(.+)(>>=\\s*$)`  
 
 * `chunk-continuation-header-regex`: Substitution pattern used by `lweave` when it finds that the definition
-  of a chunk has been extended. Default value: `$\langle$*\\\\2*$\rangle$+=`  
+  of a chunk has been extended. Default value: `<<\\\\2>>+=`  
 
 * `chunk-ref-regex`: Regex pattern, which if satisfied by a line, means that the line is a reference to
-  another chunk. Used by `ltangle` while expanding chunks. Default value: `(^\\s*$\langle$*)(.+?)(*$\rangle$\\s*$)`  
+  another chunk. Used by `ltangle` while expanding chunks. Default value: `(^\\s*<<)(.+?)(>>\\s*$)`  
 
 * `comment-startswith`: Character(s) which mark the start of a comment. Used by `ltangle` to comment out
   line-references. Default value: `None`  
@@ -495,49 +476,49 @@ make uninstall
 A few of the chunks are going to be used by all the programs that make up LitCode. Thanks to the power of
 Literate Programming, I can define these chunks once here and then use them everywhere else.  
 
-
-**1.**   The first chunk we are going to be defining is $\langle$*Import modules*$\rangle$. Making LitCode was no rocket-science: the
+@@
+@ The first chunk we are going to be defining is <<Import modules>>. Making LitCode was no rocket-science: the
 scripts are simple and don't use a huge bunch of complicated libraries and modules.  
 
-$\langle$*Import modules*$\rangle$
+<<Import modules>>=
 ```Python
 import os
 import sys
 ```
 
-**2.**   Regex is going to be used a lot during tangling and weaving process. So, we will import `re` module.  
+@ Regex is going to be used a lot during tangling and weaving process. So, we will import `re` module.  
 
-$\langle$*Import modules*$\rangle+$
+<<Import modules>>=
 ```Python
 import re
 ```
 
-**3.**   As mentioned earlier, translation dictionaries are going to be used during tangling and weaving process to
+@ As mentioned earlier, translation dictionaries are going to be used during tangling and weaving process to
 parse the WEB files correctly. This requires that we load `json` module. `load()` defined in it will be used
 for reading the dictionaries.  
 
-$\langle$*Import modules*$\rangle+$
+<<Import modules>>=
 ```Python
 import json
 ```
 
-
-**1.**   Like all programs big and small, LitCode will also have a version number which will be printed everytime one
+@@
+@ Like all programs big and small, LitCode will also have a version number which will be printed everytime one
 of the scripts is executed. We can put this version number in one chunk and use it from there everywhere.  
 
-$\langle$*version*$\rangle$
+<<version>>=
 ```Python
 version = '0.05'
 ```
 
-
-**1.**   As we are building console-scripts, naturally we need a way to read command-line arguments. This will be
-done by the function `get_cmd_args_dict()` defined in $\langle$*Read comman-line arguments and return them in a
-dictionary*$\rangle$. Keys/options/switches for the scripts are assumed to start with a hyphen, `-`. Command line
+@@
+@ As we are building console-scripts, naturally we need a way to read command-line arguments. This will be
+done by the function `get_cmd_args_dict()` defined in <<Read comman-line arguments and return them in a
+dictionary>>. Keys/options/switches for the scripts are assumed to start with a hyphen, `-`. Command line
 arguments are read and stored in a list until a key is encountered or if `sys.argv` has been exhausted. The
 default key is an empty string, `''`.
 
-$\langle$*Read command-line arguments and return them in a dictionary*$\rangle$
+<<Read command-line arguments and return them in a dictionary>>=
 ```Python
 def get_cmd_args_dict():
 	cmd_args_list = sys.argv[1:]
@@ -555,34 +536,34 @@ def get_cmd_args_dict():
 	return cmd_args_dict
 ```
 
-
+@@
 
 ## `linit.py`
-**1.**   The purpose of `linit.py` would be to write the standard translation dictionaries to filenames passed as
+@ The purpose of `linit.py` would be to write the standard translation dictionaries to filenames passed as
 command-line arguments. The user may modify the values in these files as per their wish. If `linit` is invoked
 again, it should NOT overwrite those files: it should skip writing them and exit gracefully. 
 
-$\langle$*linit.py*$\rangle$
+<<linit.py>>=
 ```Python
-"<<Import modules>>"
-"<<Read command-line arguments and return them in a dictionary>>"
-"<<Write translation dictionary to specified files>>"
+<<Import modules>>
+<<Read command-line arguments and return them in a dictionary>>
+<<Write translation dictionary to specified files>>
 ```
 
-**2.**   Translation dictionaries are going to be JSON files. `json.dumps()` does not tend to pretty-print list on a
+@ Translation dictionaries are going to be JSON files. `json.dumps()` does not tend to pretty-print list on a
 single line. That's why we will have it defined as globally accessible multline string.
 
-$\langle$*linit.py*$\rangle+$
+<<linit.py>>=
 ```Python
-"<<Translation dictionary as a multiline string>>"
+<<Translation dictionary as a multiline string>>
 ```
 
-**3.**   In a previous section, we have defined what all keys the translation dictionary will have. Now, we just need to
+@ In a previous section, we have defined what all keys the translation dictionary will have. Now, we just need to
 write it out. Care must be taken while escaping special-chars in regex expressions. Each double brace will in
 the string will correspond to a single brace when the string is written to a file. Therefore, each special
 character (example: `\s`) will be preceeded by 3 backslashes.  
 
-$\langle$*Translation dictionary as a multiline string*$\rangle$
+<<Translation dictionary as a multiline string>>=
 ```Python
 trd = '''{
 	"module-startswith": "@",
@@ -598,23 +579,23 @@ trd = '''{
 '''
 ```
 
-**4.**   We can now start defining $\langle$*Write translation dictionary to specified files*$\rangle$. The first the program will do
+@ We can now start defining <<Write translation dictionary to specified files>>. The first the program will do
 will be to print out the banner mentioning its name and version number.	 
 
-$\langle$*Write translation dictionary to specified files*$\rangle$
+<<Write translation dictionary to specified files>>=
 ```Python
 def main():
 	global trd
-	"<<version>>"
+	<<version>>
 	banner = f'LINIT {version}'
 	print(banner)
 ```
 
-**5.**   Once this `sanity-check` of installation has been done, the program will now use `get_cmd_args_dict()` to
+@ Once this `sanity-check` of installation has been done, the program will now use `get_cmd_args_dict()` to
 get a dictionary containing command line arguments. If, for some reason an empty dictionary is returned, we
 should throw an error and exit. 
 
-$\langle$*Write translation dictionary to specified files*$\rangle+$
+<<Write translation dictionary to specified files>>=
 ```Python
 	cmd_args = get_cmd_args_dict()
 	if not cmd_args:
@@ -622,9 +603,9 @@ $\langle$*Write translation dictionary to specified files*$\rangle+$
 		exit(1)
 ```
 
-**6.**   If either `-h` or `--help` option is passed, then we print out the information about `linit` and its usage.  
+@ If either `-h` or `--help` option is passed, then we print out the information about `linit` and its usage.  
 
-$\langle$*Write translation dictionary to specified files*$\rangle+$
+<<Write translation dictionary to specified files>>=
 ```Python
 	elif ('-h' in cmd_args) or ('--help' in cmd_args):
 		print(
@@ -636,7 +617,7 @@ $\langle$*Write translation dictionary to specified files*$\rangle+$
 		)
 ```
 
-**7.**   If `-f` option has been passed, then get the list of filenames to which the translation dictionary is to be
+@ If `-f` option has been passed, then get the list of filenames to which the translation dictionary is to be
 written. If no names have been passed, throw an error. Before writing to files, we need to make sure that they
 DO NOT EXIST, so that we do not end up overwriting already defined dictionaries. This can be done by using
 `os.path.isfile(`*name of the file*`)`. Furthermore, the translation dictionary might be written to a file in
@@ -644,13 +625,12 @@ a subdirectory. linit should be able to create subdirectories to write the files
 with the use of `Path(`*name of the file*`).parent.mkdir(parents = True, exist_ok = True)`. For this we will
 need to import `Path` from `pathlib`.  
 
-$\langle$*Import modules*$\rangle+$
+<<Import modules>>=
 ```Python
 from pathlib import Path
 ```
 
-**8.**   $\langle$*Write translation dictionary to specified files*$\rangle$
-
+@ <<Write translation dictionary to specified files>>=
 ```Python
 	elif '-f' in cmd_args:
 		# Fetch the full path of the file to be written
@@ -675,47 +655,47 @@ from pathlib import Path
 		exit(1)
 	print('linit has done its job. Now exiting like a nice boy.')
 ```
-
+@@
 
 ## `ltangle.py`
-**1.**   I personally felt that `ltangle` is the most complex part of LitCode. In general, tangling seems to be the
+@ I personally felt that `ltangle` is the most complex part of LitCode. In general, tangling seems to be the
 most complicated part of any literate programming tool. Each chunk needs to be pieced together from a bunch of
 files and then the references inside it are also to be expanded. It seems a job best suited for recursion: you
 can recursively keep on calling a function responsible for the expansion, in this case `expand_chunk_name()`
 until there are no more valid chunk references left to be expanded.  
 
-**2.**   Instead of parsing the files again and again looking for a chunk with a specific name during reference
+@ Instead of parsing the files again and again looking for a chunk with a specific name during reference
 expansion, we can instead read the files sequentially, while maintaining a dictionary of chunks and the lines
 contained in them. This dictionary will be called `chunk_dict`.  
 
-**3.**   We would also need ways of tracing a line in the tangled output to its source in a WEB file. This can be
+@ We would also need ways of tracing a line in the tangled output to its source in a WEB file. This can be
 done during the generation of `chunk_dict` when the files are being parsed. Later on, if the user wishes,
 these 'traces' or 'references' to WEB files can be kept a comments by putting them in between
 `comment-startswith` and `comment-endswith` characters defined in the translation dictionary.  
 
-**4.**   Finally, a way needs to be there to convert indentation in spaces to one in tabs and vice-versa. This would
+@ Finally, a way needs to be there to convert indentation in spaces to one in tabs and vice-versa. This would
 make sure that the tangled output has uniform indentation. This would also be helpful when writing Makefiles
 in a literate manner as they strictly use tabs for indentations.  
 
-**5.**   The overall structure of `ltangle.py` would be as follows:  
+@ The overall structure of `ltangle.py` would be as follows:  
 
-$\langle$*ltangle.py*$\rangle$
+<<ltangle.py>>=
 ```Python
-"<<Import modules>>"
-"<<Read command-line arguments and return them in a dictionary>>"
-"<<Get a dictionary of chunk names and their content>>"
-"<<Print out the dictionary of chunks>>"
-"<<Expand chunk name>>"
-"<<Handle indentation>>"
-"<<Handle references to WEB files>>"
-"<<Main subroutine for ltangle>>"
+<<Import modules>>
+<<Read command-line arguments and return them in a dictionary>>
+<<Get a dictionary of chunk names and their content>>
+<<Print out the dictionary of chunks>>
+<<Expand chunk name>>
+<<Handle indentation>>
+<<Handle references to WEB files>>
+<<Main subroutine for ltangle>>
 ```
 
-**6.**   The majority of the tangling process revolves around building a chunk dictionary and then expanding a
+@ The majority of the tangling process revolves around building a chunk dictionary and then expanding a
 particular reference in it. Rest of the stuff (handling indentation and references to line numbers) is
 comparatively easy.  
 
-**7.**   We begin with writing some program to generate `chunk_dict`. In this dictionary, every `chunk_name` is a key
+@ We begin with writing some program to generate `chunk_dict`. In this dictionary, every `chunk_name` is a key
 and its content is the value. This content is read sequentially from the files which are passed as
 command-line arguments to `ltangle.py`. We will receive the names of the files, we will read them one by one,
 and make our dictionary.	
@@ -736,9 +716,9 @@ beginning and end of blocks of code. An example would be triple back-ticks in Ma
 to be ignored during the tangling process. These can be read from the translation dictionary and ignored
 accordingly.  
 
-**8.**   The overall structure of the function `get_chunk_dict()` would be as follows:  
+@ The overall structure of the function `get_chunk_dict()` would be as follows:  
 
-$\langle$*Get a dictionary of chunk names and their content*$\rangle$
+<<Get a dictionary of chunk names and their content>>=
 ```Python
 def get_chunk_dict(fname_list, trd):
 	# Initialize the chunk dictionary
@@ -759,22 +739,22 @@ def get_chunk_dict(fname_list, trd):
 			# Increment the line number
 			lno += 1
 			if reading_chunk:
-				"<<Switch to `prose mode` if a new module begins and save the chunk_name and body in chunk_dict>>"
-				"<<Else keep on adding to the body of the chunk>>"
+				<<Switch to `prose mode` if a new module begins and save the chunk_name and body in chunk_dict>>
+				<<Else keep on adding to the body of the chunk>>
 			if not reading_chunk:
-				"<<Check whether the line is a chunk header or not and take required action>>"
+				<<Check whether the line is a chunk header or not and take required action>>
 		# If you reach EOF while reading a chunk, save it!
 		if chunk_name is not None:
 			chunk_dict[chunk_name] = chunk_lines
 	return chunk_dict
 ```
 
-**9.**   When we switch to prose mode and save a chunk's name and its body, we can also do a check on whether the
+@ When we switch to prose mode and save a chunk's name and its body, we can also do a check on whether the
 `@->top_level_chunk_name` is there in the dictionary or not. If it is not there, we add it. Even if we add it,
 we would still need to save the `chunk_name` and `chunk_lines` constituting its body. Once saved, we have to
 *reset* `chunk_name` and `chunk_dict`.  
 
-$\langle$*Switch to `prose mode` if a new module begins and save the chunk_name and body in chunk_dict*$\rangle$
+<<Switch to `prose mode` if a new module begins and save the chunk_name and body in chunk_dict>>=
 ```Python
 if line.startswith(trd['module-startswith']):
 	reading_chunk = False
@@ -786,12 +766,12 @@ if line.startswith(trd['module-startswith']):
 		chunk_lines = []
 ```
 
-**10.**   If while reading a `chunk_line`, the line doesn't start with `module-startswith` character defined in the
+@ If while reading a `chunk_line`, the line doesn't start with `module-startswith` character defined in the
 translation dictionary, then we can simply keep on adding the line to the body of the chunk, provided it is
 not satisfying *any* pattern in the list `to-ignore-in-chunk`. If it matches any of those patterns, we can set
 `ignore_chunk_line` and proceed with the analyzing the next line.    
 
-$\langle$*Else keep on adding to the body of the chunk*$\rangle$
+<<Else keep on adding to the body of the chunk>>=
 ```Python
 else:
 	for pattern in trd['to-ignore-in-chunk']:
@@ -802,11 +782,11 @@ else:
 			ignore_chunk_line = False
 ```
 
-**11.**   If the line is not supposed to be ignored, then we can append it to `chunk_lines`. But before adding it we
+@ If the line is not supposed to be ignored, then we can append it to `chunk_lines`. But before adding it we
 should also add a line mentioning the line number at which it can be found in the literate program file/WEB
 file.  
 
-$\langle$*Else keep on adding to the body of the chunk*$\rangle+$
+<<Else keep on adding to the body of the chunk>>=
 ```Python
 	if not ignore_chunk_line:
 		indentation = re.search(r'(^[\t\ ]*)(?=\S.*$)', line)
@@ -817,7 +797,7 @@ $\langle$*Else keep on adding to the body of the chunk*$\rangle+$
 		chunk_lines.append(line)
 ```
 
-**12.**   There are on of the two things that can happen in a literate program:  
+@ There are on of the two things that can happen in a literate program:  
 
 1. You are reading prose and you encounter a chunk-header. In that case you have to set `reading_chunk` to
    `True`. When in the next iteration the next line in the file is read, the line will be considered as a part
@@ -833,10 +813,10 @@ instead of `elif not reading_chunk`: the start of a module might also mark the s
 converse is not true: the start of a new chunk cannot mark the start of a new module as there is supposed to
 be only code in a chunk, and modules are used to define the overall structure of a literate program.  
 
-With this exposition, we can finally write up the body of the chunk $\langle$*Check whether the line is a chunk header
-or not and take required action*$\rangle$  
+With this exposition, we can finally write up the body of the chunk <<Check whether the line is a chunk header
+or not and take required action>>  
 
-$\langle$*Check whether the line is a chunk header or not and take required action*$\rangle$
+<<Check whether the line is a chunk header or not and take required action>>=
 ```Python
 tmp_line = line.lstrip(trd['module-startswith'])
 tmp_line = tmp_line.lstrip()
@@ -851,12 +831,12 @@ else:
 	reading_chunk = False
 ```
 
-**13.**   If no output file has been specified, `ltangle` should print out the expanded chunk and `chunk_dict`.
+@ If no output file has been specified, `ltangle` should print out the expanded chunk and `chunk_dict`.
 Printing out the expansion of a chunk is easy: we can simply join the lines and print them on the screen. To
 print `chunk_dict`, we can write a function `print_chunk_dict` which would print the dictionary in a somewhat
 beautiful manner.  
 
-$\langle$*Print out the dictionary of chunks*$\rangle$
+<<Print out the dictionary of chunks>>=
 ```Python
 def print_chunk_dict(chunk_dict):	
 	print('-' * 110)
@@ -871,7 +851,7 @@ def print_chunk_dict(chunk_dict):
 		print('-' * 110)
 ```
 
-**14.**   We have defined how a dictionary of chunks is to be generated. We now have to deal with expanding a
+@ We have defined how a dictionary of chunks is to be generated. We now have to deal with expanding a
 particular chunk name. Intuitively, it seems to be a task best suited for recursion. Here is a rough algorithm
 of how a chunk name has to be expanded:  
 
@@ -893,7 +873,7 @@ of how a chunk name has to be expanded:
 
 4. Once all the `chunk_lines` have been analyzed, simply return `tangled_lines`.  
 
-$\langle$*Expand chunk name*$\rangle$
+<<Expand chunk name>>=
 ```Python
 def expand_chunk_name(chunk_name, trd, chunk_dict):
 	tangled_lines = []
@@ -921,11 +901,11 @@ def expand_chunk_name(chunk_name, trd, chunk_dict):
 	return tangled_lines
 ```
 
-**15.**   Handling references to WEB files would be easy. If `-L` option has been passed in the command-line when
+@ Handling references to WEB files would be easy. If `-L` option has been passed in the command-line when
 invoking `ltangle`, then the references to line numbers of WEB files we added when making `chunk_dict` are to
 be included, else not.  
 
-$\langle$*Handle references to WEB files*$\rangle$
+<<Handle references to WEB files>>=
 ```Python
 def src_line_identifier_handler(tangled_lines, trd, include_comments):
 	buffer = []
@@ -941,13 +921,13 @@ def src_line_identifier_handler(tangled_lines, trd, include_comments):
 	return tangled_lines
 ```
 
-**16.**   Conversion of tabs to spaces and vice-versa is also pretty simple. We simply need to replace a given bunch
+@ Conversion of tabs to spaces and vice-versa is also pretty simple. We simply need to replace a given bunch
 of whitespaces to another bunch of whitespaces using `replace()` method for `str` datatype in Python. By
 default, `ltangle` converts tabs to spaces. The default value of tab size is 4. To convert spaces to tabs
 (important if you are building a Makefile as a literate program), then you have to invoke `ltangle` with `-t`
 flag.  
 
-$\langle$*Handle indentation*$\rangle$
+<<Handle indentation>>=
 ```Python
 def indentation_handler(tangled_lines, use_tabs, tab_size):
 	buffer = []
@@ -961,14 +941,14 @@ def indentation_handler(tangled_lines, use_tabs, tab_size):
 	return tangled_lines
 ```
 
-**17.**   The main subroutine will be responsible for processing command-line args passed to `ltangle` and then, based
+@ The main subroutine will be responsible for processing command-line args passed to `ltangle` and then, based
 on these arguments, generate some output, which could be a helpful listing of switches to be used with
-`ltangle`, or the tangled output. The overall structure of $\langle$*Main subroutine for ltangle*$\rangle$ is as follows:  
+`ltangle`, or the tangled output. The overall structure of <<Main subroutine for ltangle>> is as follows:  
 
-$\langle$*Main subroutine for ltangle*$\rangle$
+<<Main subroutine for ltangle>>=
 ```Python
 def main():
-	"<<version>>"
+	<<version>>
 	banner = 'LTANGLE ' + version
 	print(banner)
 	cmd_args = get_cmd_args_dict()
@@ -990,9 +970,9 @@ def main():
 		exit(1)
 	# It the user wishes to get some help, then he shall have it and nothing more!
 	elif ('-h' in cmd_args) or ('--help' in cmd_args):
-		"<<Print purpose of ltangle and switches which can be used with it>>"
+		<<Print purpose of ltangle and switches which can be used with it>>
 	elif '' in cmd_args:
-		"<<Process command-line arguments passed to ltangle if not running in help mode>>"
+		<<Process command-line arguments passed to ltangle if not running in help mode>>
 	else:
 		print('No filename(s) have been provided!')
 		exit(1)
@@ -1029,7 +1009,7 @@ def main():
 	print('ltangle has done its job. Now going away like a good girl.')
 ```
 
-**18.**   I have not explained the how the command-line arguments are being processed as much of the code doing that
+@ I have not explained the how the command-line arguments are being processed as much of the code doing that
 job is self explainatory and *boring*: just setting some switches and all. Maybe I will add a few lines
 explaining them later on.  
 
@@ -1037,7 +1017,7 @@ Still, the big picture is that if `-h` or `--help` option is passed to `ltangle`
 mode irrespective of whatever other arguments have been passed to it. If it is not running in help-mode, then
 it will tangle the chunk-name out of the list of WEB files passed to it as argument.  
 
-**19.**   $\langle$*Print purpose of ltangle and switches which can be used with it*$\rangle$
+@ <<Print purpose of ltangle and switches which can be used with it>>=
 ```Python
 print(
 	'Usage: ltangle [FILES] -trd [FILE[.json]] [OPTIONS]\n' +
@@ -1065,7 +1045,7 @@ print(
 exit(0)
 ```
 
-**20.**   $\langle$*Process command-line arguments passed to ltangle if not running in help mode*$\rangle$
+@ <<Process command-line arguments passed to ltangle if not running in help mode>>=
 ```Python
 # Get file-names
 fname_list = cmd_args['']
@@ -1114,31 +1094,31 @@ if '-t' in cmd_args:
 		tab_size = 4
 ```
 
-
+@@
 
 ## `lweave.py`
-**1.**   We stand on the shoulders of the giants. Much of the key ideas and chunks have already been explained in
+@ We stand on the shoulders of the giants. Much of the key ideas and chunks have already been explained in
 `linit.py` and `ltangle.py`. Writing `lweave.py`, the program responsible for weaving, is cakewalk compared to
 them. The overall structure of `lweave.py` is simple:
 
-$\langle$*lweave.py*$\rangle$
+<<lweave.py>>=
 ```Python
-"<<Import modules>>"
+<<Import modules>>
 
 trd = None
 woven_lines = None
 
-"<<Read command-line arguments and return them in a dictionary>>"
-"<<Generate woven lines>>"
-"<<Main subroutine for lweave>>"
+<<Read command-line arguments and return them in a dictionary>>
+<<Generate woven lines>>
+<<Main subroutine for lweave>>
 ```
 
-**2.**   One thing which the reader will straightaway notice is that unlike in `ltangle`, both `trd` and the list
+@ One thing which the reader will straightaway notice is that unlike in `ltangle`, both `trd` and the list
 holding the processed lines, `woven_lines`, are defined as global variables. This is because we will be using
 `exec()` to execute Python code present in strings to further process `woven_lines`. It is much easier to set
 them as global variables and process `woven_lines` further in `exec()`.  
 
-**3.**   The key processing tasks that `lweave.py` does to generate *beautified* documents are:  
+@ The key processing tasks that `lweave.py` does to generate *beautified* documents are:  
 
 1. Ignore the lines present in the list `to-ignore-in-prose` defined in the translation dictionary.  
 
@@ -1149,7 +1129,7 @@ them as global variables and process `woven_lines` further in `exec()`.
    change the way the header is written. Else if it is not in the list, it is a new chunk and we do not have
    to perform any substitutions.  
 
-$\langle$*Generate woven lines*$\rangle$
+<<Generate woven lines>>=
 ```Python
 def get_woven_lines(fname_list, trd):
 	chunk_name = None
@@ -1180,7 +1160,7 @@ def get_woven_lines(fname_list, trd):
 	return woven_lines
 ```
 
-**4.**   $\langle$*Main subroutine for lweave*$\rangle$
+@ <<Main subroutine for lweave>>=
 ```Python
 def main():
 	global trd, woven_lines
@@ -1200,15 +1180,15 @@ def main():
 		print('No arguments have been passed!')
 		exit(1)
 	elif ('-h' in cmd_args) or ('--help' in cmd_args):
-		"<<Print purpose of lweave and switches which can be used with it>>"
+		<<Print purpose of lweave and switches which can be used with it>>
 	elif '' in cmd_args:
-		"<<Process command-line arguments passed to lweave if not running in help mode>>"
+		<<Process command-line arguments passed to lweave if not running in help mode>>
 	else:
 		print('No filename(s) have been provided!')
 		exit(1)
 	# Generate woven lines
 	woven_lines = get_woven_lines(fname_list, trd)
-	"<<Execute hooks>>"
+	<<Execute hooks>>
 	# Write the woven output to the files if debug_mode = False, else print it on the screen
 	woven_lines = ''.join(woven_lines)
 	if debug_mode:
@@ -1228,7 +1208,7 @@ def main():
 	print('lweave has done its job. Consider it a gift from God!')
 ```
 
-**5.**   $\langle$*Print purpose of lweave and switches which can be used with it*$\rangle$
+@ <<Print purpose of lweave and switches which can be used with it>>=
 ```Python
 print(
 	'Usage: lweave [FILES] -trd [FILE[.json]] [OPTIONS]\n' +
@@ -1247,7 +1227,7 @@ print(
 exit(0)
 ```
 
-**6.**   $\langle$*Process command-line arguments passed to lweave if not running in help mode*$\rangle$
+@ <<Process command-line arguments passed to lweave if not running in help mode>>=
 ```Python
 # Get file-names
 fname_list = cmd_args['']
@@ -1275,11 +1255,11 @@ if '-hk' in cmd_args:
 	hook_list = cmd_args['-hk']
 ```
 
-**7.**   Process the lines further by executing the scripts present in the list `hooks` in the translation
+@ Process the lines further by executing the scripts present in the list `hooks` in the translation
 dictionary. At the end of each of these hooks, it is important to make sure that `woven_lines` is set so that
 the modifications made when executing the hooks really take affect.  
 
-$\langle$*Execute hooks*$\rangle$
+<<Execute hooks>>=
 ```Python
 for hook in hook_list:
 	if hook in trd["hooks"]:
@@ -1290,7 +1270,7 @@ for hook in hook_list:
 		exec(hook_lines, globals())
 ```
 
-
+@@
 ### Examples of hooks
 At this point I would like to give the reader two examples of hooks which will be used very often:
 `insert_module_number` and `format_ch_cr`. While the former will be used to insert a number instead of
@@ -1299,7 +1279,7 @@ words defined in \TeX{}.
 
 **`format_ch_cr`**  
 
-**1.**   $\langle$*format_ch_cr*$\rangle$
+@ <<format_ch_cr>>=
 ```Python
 buffer = []
 reading_chunk = False
@@ -1312,10 +1292,10 @@ for line in woven_lines:
 			if is_chunk_reference:
 ```
 
-**2.**   If we encounter a chunk-reference inside a chunk, then it is best to comment it out. That is the simplest
+@ If we encounter a chunk-reference inside a chunk, then it is best to comment it out. That is the simplest
 and least problematic way to make them look beautiful in the woven document.  
 
-$\langle$*format_ch_cr*$\rangle+$
+<<format_ch_cr>>= 
 ```Python
 				line = line.replace('<<', trd['comment-startswith'] + '<<')
 				line = line.replace('>>', '>>' + trd['comment-endswith'])
@@ -1341,14 +1321,14 @@ $\langle$*format_ch_cr*$\rangle+$
 woven_lines = buffer
 ```
 
-
+@@
 
 **`insert_module_number`**  
 
-**1.**   Inserting module numbers is simple: simply replace `module-startswith` character with the value in the
+@ Inserting module numbers is simple: simply replace `module-startswith` character with the value in the
 counter and increment the counter.  
 
-$\langle$*insert_module_number*$\rangle$
+<<insert_module_number>>=
 ```Python
 count = 0
 buffer = []
@@ -1366,24 +1346,24 @@ for line in woven_lines:
 woven_lines = buffer
 ```
 
-
+@@
 
 ## `lhooks.py`
-**1.**   A user of LitCode might not be interested in copy-pasting `format_ch_cr` and `insert_module_number` everytime
+@ A user of LitCode might not be interested in copy-pasting `format_ch_cr` and `insert_module_number` everytime
 they write a literate program. So, it is best to have a script which does this job for them. Just run `lhooks`
 and it will write the helpful hooks in the current directory. It will skip writing the hooks if they already
 exist.  
 
-$\langle$*lhooks.py*$\rangle$
+<<lhooks.py>>=
 ```Python
-"<<Import modules>>"
+<<Import modules>>
 
 format_ch_cr = '''
-"<<format_ch_cr>>"
+<<format_ch_cr>>
 '''
 
 insert_module_number = '''
-"<<insert_module_number>>"
+<<insert_module_number>>
 '''
 
 def main():
@@ -1400,7 +1380,7 @@ def main():
 		print('Skipping writing insert_module_number')
 ```
 
-
+@@
 ## `__init__.py` and `setup.py`
 We will be using the scripts we have defined so far as console-scripts. We can install them in a system in
 two ways:  
@@ -1426,21 +1406,21 @@ First, some exposition (copied verabitm from StackOverflow):
 First let us get `__init__.py` out of the way. It is basically a *special* blank file which tells Python that
 the directory in which it resides is a package.  
 
-$\langle$*__init__.py*$\rangle$
+<<__init__.py>>=
 ```Python
 
 ```
 
-
+@@
 
 The purpose of `setup.py` is to ensure that the package is distributed and installed properly across various
 systems while taking care of dependencies.  
 
-$\langle$*setup.py*$\rangle$
+<<setup.py>>=
 ```Python
 from setuptools import setup, find_packages
 
-"<<version>>"
+<<version>>
 setup(
 	name = 'litcode',
 	version = version,
@@ -1456,6 +1436,6 @@ setup(
 )
 ```
 
-
+@@
 Using these scripts, we can use `pip` to install LitCode in a system.  
 

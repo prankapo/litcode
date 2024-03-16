@@ -1,0 +1,34 @@
+
+buffer = []
+reading_chunk = False
+for line in woven_lines:
+	if reading_chunk:
+		if line.startswith(trd['module-startswith']):
+			reading_chunk = False
+		else:
+			is_chunk_reference = re.search(trd['chunk-ref-regex'], line)
+			if is_chunk_reference:
+
+				line = line.replace('<<', trd['comment-startswith'] + '<<')
+				line = line.replace('>>', '>>' + trd['comment-endswith'])
+	if not reading_chunk:
+		tmp_line = line.lstrip(trd['module-startswith'])
+		tmp_line = tmp_line.lstrip()
+		is_chunk_header = re.search(trd['chunk-header-regex'], tmp_line)
+		if is_chunk_header:
+			reading_chunk = True
+			line = line.replace('<<', '$\\langle$*')
+			line = line.replace('>>=', '*$\\rangle\\!\\!\\equiv$')
+		else:
+			is_chunk_header = re.search(r'(^<<)(.+)(>>\+=\s*$)', tmp_line)
+			if is_chunk_header:
+				reading_chunk = True
+				line = line.replace('<<', '$\\langle$*')
+				line = line.replace('>>+=', '*$\\rangle+\\!\\!\\equiv$')
+			else:
+				reading_chunk = False
+				line = line.replace('<<', '$\\langle$*')
+				line = line.replace('>>', '*$\\rangle$')
+	buffer.append(line)
+woven_lines = buffer
+

@@ -4,124 +4,86 @@ EXAMPLES := examples
 WEB := web
 SHELL := /usr/bin/bash
 
-.PHONY: all clean boot src install examples documentation buildtex
+.PHONY: install test-install boot chicken trd src hooks documentation pdf examples clean uninstall
 
-all:
-	@echo "Performing initial tangling of web files using bootstrap code..."
+install: 
+	@echo "Installing LitCode..."
 	$(MAKE) boot
-	@echo "Done.\n"
-	@echo "Installing using pip..."
-	$(MAKE) install
-	@echo "Done.\n"
-	@echo "Clearing the directories..."
-	$(MAKE) clean
-	@echo "Done.\n"
-	@echo "Tangling using installed scripts..."
-	$(MAKE) tangle
-	@echo "Done.\n"
-	@echo "Weaving using installed scripts..."
-	$(MAKE) weave
-	@echo "Done.\n"
-	@echo "Building the documentation..."
-	-$(MAKE) buildtex
-	@echo "Done.\n"
-	@echo "Done.\n"
-
-# This part is for generating the 'raw' source files
-boot: 
-	mkdir -p litcode
-	python3 $(BOOT)/ldump.py $(WEB)/setup.web $(WEB)/version.web > $(WEB)/src.json
-	python3 $(BOOT)/ltangle.py -i $(WEB)/src.json -R setup.py > setup.py
-	python3 $(BOOT)/ltangle.py -i $(WEB)/src.json -R __init__.py > litcode/__init__.py
-	python3 $(BOOT)/ldump.py $(WEB)/plsty.web $(WEB)/styling_file.web $(WEB)/version.web \
-			> $(WEB)/src.json
-	python3 $(BOOT)/ltangle.py -i $(WEB)/src.json -R plsty.py > litcode/plsty.py
-	python3 $(BOOT)/ldump.py $(WEB)/ldump.web $(WEB)/ltangle.web $(WEB)/lweave.web $(WEB)/version.web \
-			> $(WEB)/src.json
-	python3 $(BOOT)/ltangle.py -i $(WEB)/src.json -R ldump.py > litcode/ldump.py
-	python3 $(BOOT)/ltangle.py -i $(WEB)/src.json -R ltangle.py > litcode/ltangle.py
-	python3 $(BOOT)/ltangle.py -i $(WEB)/src.json -R lweave.py > litcode/lweave.py
-
-tangle: src
-
-src:
-	mkdir -p litcode
-	ldump $(WEB)/setup.web $(WEB)/version.web > $(WEB)/src.json
-	ltangle -i $(WEB)/src.json -R setup.py > setup.py
-	ltangle -i $(WEB)/src.json -R __init__.py > litcode/__init__.py
-	ldump $(WEB)/plsty.web $(WEB)/styling_file.web $(WEB)/version.web > $(WEB)/src.json
-	ltangle -i $(WEB)/src.json -R plsty.py > litcode/plsty.py
-	ldump $(WEB)/ldump.web $(WEB)/ltangle.web $(WEB)/lweave.web $(WEB)/version.web > $(WEB)/src.json
-	ltangle -i $(WEB)/src.json -R ldump.py > litcode/ldump.py
-	ltangle -i $(WEB)/src.json -R ltangle.py > litcode/ltangle.py
-	ltangle -i $(WEB)/src.json -R lweave.py > litcode/lweave.py
-
-install: $(wildcard litcode/*.py)
+	$(MAKE) chicken
 	python3 -m pip install .
+	@echo "Done."
 
-# weave: weaving the documentation
-weave: documentation buildtex
-
-documentation: $(wildcard web/*.web)
-	mkdir -p documentation
-	plsty $(DOC)
-	cp -v version.txt $(DOC)/version.txt
-	ldump $(WEB)/version.web > $(DOC)/src.json
-	ltangle -i $(DOC)/src.json -R version > $(DOC)/version.tmp
-	ltangle -i $(DOC)/src.json -R version > version.txt
-	date > $(DOC)/date.tmp
-	tr '\n' ' ' < $(DOC)/date.tmp > $(DOC)/date.txt
-	tr '\n' ' ' < $(DOC)/version.tmp > $(DOC)/version.txt
-	rm $(DOC)/*.tmp
-	lweave $(WEB)/litcode.web > $(DOC)/litcode.tex
-	lweave $(WEB)/introduction.web > $(DOC)/introduction.tex
-	lweave $(WEB)/source_code.web > $(DOC)/source_code.tex
-	lweave $(WEB)/version.web > $(DOC)/version.tex
-	lweave $(WEB)/terminology.web > $(DOC)/terminology.tex
-	lweave $(WEB)/ldump.web > $(DOC)/ldump.tex
-	lweave $(WEB)/ltangle.web > $(DOC)/ltangle.tex
-	lweave $(WEB)/lweave.web > $(DOC)/lweave.tex
-	lweave $(WEB)/styling_file.web $(WEB)/plsty.web > $(DOC)/styling_file_and_plsty.tex
-	lweave $(WEB)/setup.web > $(DOC)/setup.tex
-	cp web/references.web $(DOC)/references.bib
-
-# buildtex: compile the PDF
-buildtex: $(DOC)/litcode.tex $(DOC)/references.bib
-	@echo "Building using LaTeX"
-	-cd documentation && \
-	texliveonfly litcode.tex
-	-cd documentation && \
-	biber litcode && \
-	pdflatex litcode.tex && \
-	pdflatex litcode.tex > build-tex.log
-	@echo "Done.\n"
-
-# buildtex: compile the PDF
-buildtex-fast: $(DOC)/litcode.tex $(DOC)/references.bib
-	@echo "Building using LaTeX"
-	-cd documentation && \
-	texliveonfly litcode.tex
-	-cd documentation && \
-	biber litcode && \
-	pdflatex -interaction=batchmode litcode.tex && \
-	pdflatex -interaction=batchmode litcode.tex > build-tex.log
-	@echo "Done.\n"
-
-# clean: cleans everything except for web files
-hard-clean: 
+test-install: 
 	$(MAKE) clean
-	$(MAKE) uninstall
-	clear
+	$(MAKE) trd
+	$(MAKE) trd
+	$(MAKE) src
+	$(MAKE) hooks
+	$(MAKE) hooks
+	$(MAKE) documentation
+
+boot:
+	@echo "Using bootstrap code to tangle linit and ltangle..."
+	python3 bootstrap/linit.py -f trd.json
+	python3 bootstrap/ltangle.py web/README.md -trd trd.json -t 4 -c linit.py -o litcode-tmp/linit.py
+	python3 bootstrap/ltangle.py web/README.md -trd trd.json -t 4 -c ltangle.py -o litcode-tmp/ltangle.py
+	@echo "Done."
+	@echo 'Modifying linit.py and ltangle.py...'
+	@echo 'main()' >> litcode-tmp/linit.py
+	@echo 'main()' >> litcode-tmp/ltangle.py
+	@echo "Done."
+
+chicken:
+	@echo "Using linit and ltangle to build LitCode..."
+	python3 litcode-tmp/linit.py -f trd.json
+	python3 litcode-tmp/ltangle.py web/README.md -trd trd.json -t 4 -c linit.py -o litcode/linit.py
+	python3 litcode-tmp/ltangle.py web/README.md -trd trd.json -t 4 -c ltangle.py -o litcode/ltangle.py
+	python3 litcode-tmp/ltangle.py web/README.md -trd trd.json -t 4 -c lweave.py -o litcode/lweave.py
+	python3 litcode-tmp/ltangle.py web/README.md -trd trd.json -t 4 -c lhooks.py -o litcode/lhooks.py
+	python3 litcode-tmp/ltangle.py web/README.md -trd trd.json -t 4 -c __init__.py -o litcode/__init__.py
+	python3 litcode-tmp/ltangle.py web/README.md -trd trd.json -t 4 -c setup.py -o setup.py
+	rm -rf litcode-tmp
+	@echo "Done."
+
+trd:
+	linit -f trd.json
+	sed -i 's/"comment-startswith":.*/"comment-startswith":"\\"",/g' trd.json
+	sed -i 's/"comment-endswith":.*/"comment-endswith":"\\"",/g' trd.json
+	
+src:
+	ltangle web/README.md -trd trd.json -t 4 -c linit.py -o litcode/linit.py
+	ltangle web/README.md -trd trd.json -t 4 -c ltangle.py -o litcode/ltangle.py
+	ltangle web/README.md -trd trd.json -t 4 -c lweave.py -o litcode/lweave.py
+	ltangle web/README.md -trd trd.json -t 4 -c lhooks.py -o litcode/lhooks.py
+	ltangle web/README.md -trd trd.json -t 4 -c __init__.py -o litcode/__init__.py
+	ltangle web/README.md -trd trd.json -t 4 -c setup.py -o setup.py
+
+hooks:
+	lhooks
+
+documentation:
+	(cd figures; make literate_workflow; make clean)
+	lweave web/README.md -trd trd.json -hk format_ch_cr insert_module_number fix_4_gfm -o README.md
+	doctoc README.md
+
+pdf:
+	pandoc -s -r markdown -t pdf -V geometry:margin=2.5cm,landscape README.md -o README.pdf
+
+examples:
+	ltangle web/README.md -trd trd.json -c generate_primes.c -o examples/generate_primes.c
+	ltangle web/README.md -trd trd.json -c make_example.mk -t 4 -o examples/Makefile
+	(cd examples; make test; make clean)
 
 clean:
-	-find . -type f -name "*.json" -exec rm {} +
-	-rm -rf litcode setup.py
-	-find documentation/ ! -name 'litcode.pdf' -type f -exec rm -f {} +
-	-rm -rf litcode.egg-info
-	-rm -rf build
+	-rm -rf litcode/
+	-rm -rf litcode-tmp/
+	-rm -rf litcode.egg-info/
+	-rm -rf build/
+	-rm -rf examples/
+	-rm *.pdf
+	-rm setup.py
 
-# uninstall: uninstalls the scripts
 uninstall: 
-	echo 'Uninstalling LitCode'
+	@echo "Uninstalling LitCode..."
 	python3 -m pip uninstall litcode
-	echo 'LitCode uninstalled successfully'
+	@echo "Done."
