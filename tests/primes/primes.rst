@@ -1,0 +1,83 @@
+Program to generate first N prime numbers in C
+==============================================
+.. |br| raw:: html
+@ We first begin by definining the structure of the file. We will have some header files, the main body of the
+code and a function ``isprime()`` which will tell whether the integer which has been passed to it is a prime
+number or not. 
+|br|
+<<primes.c>>=
+.. code-block:: C
+    <<Program header>>
+    <<main()>>
+    <<isprime()>>
+
+
+@ The executable can be run from command-line and will receive only one argument, which would be the value of
+N. We will need some facility to convert string to integer which will be provided by ``atoi()``. For this we
+will include ``stdlib.h``. We will also include ``stdint.h`` so that we can use uint64_t which would allow us
+to deal with big numbers. |br|
+<<Program header>>=
+.. code-block:: C
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <stdint.h>
+
+
+@ We will also need to include a prototype for the function ``isprime()`` which takes in one ``uint64_t``. It
+returns 0 if the unsigned integer is prime, else it will return a 1.   |br|
+<<Program header>>=
+.. code-block:: C
+    int isprime(uint64_t);
+
+
+@ Let us define ``isprime()``. Here is the algorithm using which I learnt how to check whether a number is
+prime or not:   |br|
+**Step 1**: Input $n$.   |br|
+**Step 2**: Initialize $d = 1$, $d\_count = 0$.   |br|
+**Step 3**: If $d \le n / 2$, continue. Else jump to **Step 6**.|br|
+**Step 4**: If $n % d = 0$, then $d\_count += 1$.   |br|
+**Step 5**: If $d\_count > 1$, then jump to **Step 6**.  |br|
+Else jump to **Step 3**  |br|
+**Step 6**: If $d\_count = 1$, return 0. Else return 1.  |br|
+
+And here is the code which does this job:  |br|
+
+<<isprime()>>=
+.. code-block:: C
+    int isprime(uint64_t n) {
+        uint64_t d, d_count;
+        for (d = 1, d_count = 0; d <= n / 2; ++d) {
+            if (n % d == 0) {
+                ++d_count;
+            }
+            if (d_count > 1) {
+                break;
+            }
+        }
+        if (d_count == 1) {
+            return 0;
+        }
+        return 1;
+    }
+
+
+@ The ``main()`` body of the code is going to be relatively simple. We will read the value of $N$ from the
+command line, initialize $p\_count$, and increment $n$, check whether it is prime or not, and will keep on
+incrementing and checking $n$ till $p\_count = N$.  |br|
+<<main()>>=
+.. code-block:: C
+    int main(int argc, char ** argv) {
+        uint64_t n, N, p_count;
+        if (argc < 2) {
+            fprintf(stdout, "Missing argument N");
+            return 1;
+        }
+        N = (uint64_t) atoi(argv[1]);
+        for (n = 2, p_count = 0; p_count <= N; ++n) {
+            if (isprime(n) == 0) {
+                ++p_count;
+                fprintf(stdout, "%lld.\t%4lld\n", p_count, n);
+            }
+        }
+        return 0;
+    }

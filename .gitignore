@@ -555,5 +555,5 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/latex,python,c,c++
 *.json
 
-# For MacOS
+# On MacOS, ignore .DS_Store file
 .DS_Store

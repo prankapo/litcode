@@ -1,0 +1,30 @@
+Heading 1
+---------
+
+@ A big brown fox jumped over a little lazy dog
+The dog was wondering <<What a ...>>, and soon pranced out!
+
+@ A big brown lizard also then jumped over the little lazy dog!
+Poor dog! He went inside its room and started coding! (What a stupid thing! There is life outside dumbass!!)
+<<isPrime()>>=
+<<Program header>>
+int isprime(uint64_t n) {
+	uint64_t d, d_count;
+	for (d = 1, d_count = 1; d <= n / 2; ++d) {
+		if (n % d == 0) {
+			++d_count;
+		}
+		if (d_count > 1) {
+			break;
+		}
+	}
+	--d_count;	/* Step 6 */
+	switch (d) {
+		case 1: <<When 1, take a piss>>
+		case 2: <<When 2, you need to go to argentina where you will encounter a commodo dragon. Befriend that dragon and return home 
+		to your mistress>>
+	}
+	return 0;
+}
+
+@ <<What a stupid fox!!>>= There is life outside the wall Eren!! Stop sulking in your room!!

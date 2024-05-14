@@ -1,0 +1,51 @@
+Heading 1
+=========
+@reset
+@ Mose
+@reset
+@ Mose says hello << Can you write this piece of Code? >> 
+But Mose is not interested in checking it.
+@ Anyways, Mose says this is the chunk:  
+@<<A Simple Piece of Code>>=
+1Line1
+1Line2
+    1Line3
+    1Line4
+    <<A section that ...>>
+    1Line5
+
+@ @<<A section that is referred>>=
+1Line4a
+1Line4b
+	1Line4c
+	  1Line4d
+
+@reset
+Heading 2
+---------
+@ Dwight says that Noweb is better. Jim doesn't believe it. 
+A simple code is beautiful. 
+
+@ Here comes Ryan. He has referenced a chunk which splits on two lines: <<A
+section ...>>. He decides that he will write a much better piece
+of code. 
+@<<top.t>>=
+    	<<Coding is not fun>>
+
+@ Michael is in support. He writes: 
+@<<Coding is ...>>=
+But Selling paper is Fun!
+I certainly believe that we can <<Sell more paper 
+this quarter>>. So, I want you all to stay calm, and take <<Stanley's advice>>.
+
+@ Enter Stanley and he says: 
+@<<Stanley's advice>>=
+Stanley says: 
+	  Shove those paper rolls up your butt Michael!
+	   Did I stutter?
+	   <<A section for Stanley>>
+
+@ Stanley went on to say that coding is fun!
+@<<A section for ...>>=
+MY GIRL LOVES CODING!!!!
+CODING IS FUN!!!

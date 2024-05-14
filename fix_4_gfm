@@ -1,6 +1,0 @@
-buffer = []
-for line in woven_lines:
-	if '\\!\\!\\equiv' in line:
-		line = line.replace('\\!\\!\\equiv', '')
-	buffer.append(line)
-woven_lines = buffer

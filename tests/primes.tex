@@ -1,0 +1,101 @@
+\section{Program to generate first N prime numbers in C}
+
+\textbf{1.}~~~~ We first begin by definining the structure of the file. We will have some header files, the main body of the
+code and a function \texttt{isprime()} which will tell whether the integer which has been passed to it is a
+prime number or not.
+  
+\par\noindent
+$\langle$primes.c \footnotesize 1 \normalsize  $\rangle\equiv$\vspace{-10pt}
+
+\begin{lstlisting}[upquote=true,columns=fullflexible,basicstyle=\fontfamily{SourceCodePro-TLF}\small,escapeinside={@<}{@>},language=C]
+
+@<$\langle$Program header \footnotesize 2, 3 \normalsize  $\rangle$@>
+@<$\langle$main() \footnotesize 5 \normalsize  $\rangle$@>
+@<$\langle$isprime() \footnotesize 4 \normalsize  $\rangle$@>
+
+
+\end{lstlisting}
+\textbf{2.}~~~~ The executable can be run from command-line and will receive only one argument, which would be the value of
+N. We will need some facility to convert string to integer which will be provided by \texttt{atoi()}. For this
+we will include \texttt{stdlib.h}. We will also include \texttt{stdint.h} so that we can use \texttt{uint64\_t}
+which would allow us to deal with big numbers.   
+\par\noindent
+$\langle$Program header \footnotesize 2, 3 \normalsize  $\rangle\equiv$\vspace{-10pt}
+
+\begin{lstlisting}[upquote=true,columns=fullflexible,basicstyle=\fontfamily{SourceCodePro-TLF}\small,escapeinside={@<}{@>},language=C]
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+\end{lstlisting}
+\textbf{3.}~~~~ We will also need to include a prototype for the function \texttt{isprime()} which takes in one
+\texttt{uint64\_t}. It returns 0 if the unsigned integer is prime, else it will return a 1.   
+\par\noindent
+$\langle$Program header \footnotesize 2, 3 \normalsize  $\rangle +\equiv$\vspace{-10pt}
+
+\begin{lstlisting}[upquote=true,columns=fullflexible,basicstyle=\fontfamily{SourceCodePro-TLF}\small,escapeinside={@<}{@>},language=C]
+
+int isprime(uint64_t);
+
+
+\end{lstlisting}
+\textbf{4.}~~~~ Let us define \texttt{isprime()}. Here is the algorithm using which I learnt how to check whether a number
+is prime or not:   
+\textbf{Step 1}: Input $n$.   
+\textbf{Step 2}: Initialize $d = 1$, $d\_count = 0$.   
+\textbf{Step 3}: If $d \le n / 2$, continue. Else jump to \textbf{Step 6}.
+\textbf{Step 4}: If $n \% d = 0$, then $d\_count += 1$.   
+\textbf{Step 5}: If $d\_count > 1$, then jump to \textbf{Step 6}.  
+Else jump to \textbf{Step 3}  
+\textbf{Step 6}: If $d\_count = 1$, return 0. Else return 1.  
+
+And here is the code which does this job:  
+\par\noindent
+$\langle$isprime() \footnotesize 4 \normalsize  $\rangle\equiv$\vspace{-10pt}
+
+\begin{lstlisting}[upquote=true,columns=fullflexible,basicstyle=\fontfamily{SourceCodePro-TLF}\small,escapeinside={@<}{@>},language=C]
+
+int isprime(uint64_t n) {
+	uint64_t d, d_count;
+	for (d = 1, d_count = 0; d <= n / 2; ++d) {
+		if (n % d == 0) {
+			++d_count;
+		}
+		if (d_count > 1) {
+			break;
+		}
+	}
+	if (d_count == 1) {
+		return 0;
+	}
+	return 1;
+}
+
+
+\end{lstlisting}
+\textbf{5.}~~~~ The \texttt{main()} body of the code is going to be relatively simple. We will read the value of $N$ from
+the command line, initialize $p\_count$, and increment $n$, check whether it is prime or not, and will keep on
+incrementing and checking $n$ till $p\_count = N$.  
+\par\noindent
+$\langle$main() \footnotesize 5 \normalsize  $\rangle\equiv$\vspace{-10pt}
+
+\begin{lstlisting}[upquote=true,columns=fullflexible,basicstyle=\fontfamily{SourceCodePro-TLF}\small,escapeinside={@<}{@>},language=C]
+
+int main(int argc, char \textbf{ argv) {
+	uint64_t n, N, p_count;
+	if (argc < 2) {
+		fprintf(stdout, "Missing argument N");
+		return 1;
+	}
+	N = (uint64_t) atoi(argv[1]);
+	for (n = 2, p_count = 0; p_count <= N; ++n) {
+		if (isprime(n) == 0) {
+			++p_count;
+			fprintf(stdout, "%lld.\t%4lld\n", p_count, n);
+		}
+	}
+	return 0;
+}
+\end{lstlisting}
